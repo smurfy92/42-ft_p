@@ -11,4 +11,6 @@
 /* ************************************************************************** */
 
 #include <sys/socket.h>
+#include <netdb.h>
+#include <stdio.h>
 #include "../libft/includes/libft.h"
