@@ -1,6 +1,8 @@
-SRC = srcs/serveur.c
+SRC_S = srcs/serveur.c
+SRC_C = srcs/client.c
 
-OBJ = $(SERVE:.c=.o)
+OBJ_S = $(SRC_S:.c=.o)
+OBJ_C = $(SRC_C:.c=.o)
 
 LIB = libft/libft.a
 FLAG = -Wall -Werror -Wextra
@@ -12,8 +14,8 @@ INC = -I ./includes/
 
 all: start
 	-@make -C libft nohd
-	@gcc -o ft_serve $(SRC) $(FLAG) $(INC) $(LIB);
-	@echo "$(CY)[OTOOL] :$(CE) $(CG)Compiling otool ...$(CE)";
+	gcc -fsanitize=address -o ft_serve $(SRC_S) $(FLAG) $(INC) $(LIB);
+	gcc -o ft_client $(SRC_C) $(FLAG) $(INC) $(LIB);
 
 
 
