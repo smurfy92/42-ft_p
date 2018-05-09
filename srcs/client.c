@@ -6,7 +6,7 @@
 /*   By: jtranchi <jtranchi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/20 12:04:45 by jtranchi          #+#    #+#             */
-/*   Updated: 2018/04/21 14:59:51 by jtranchi         ###   ########.fr       */
+/*   Updated: 2018/04/28 13:51:21 by jtranchi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,15 +53,15 @@ void remove_back(char *str)
 	i = -1;
 	while (str[++i])
 		if (str[i] == '\n')
-			str[i] = ' ';
+			str[i] = 0;
 }
 
 int main(int argc, char **argv)
 {
 	int port;
 	int socket;
-	char *buf;
-	int r;
+	char buf[1024];
+	// int r;
 	char buf2[1024];
 	int t;
 
@@ -74,16 +74,16 @@ int main(int argc, char **argv)
 	while (42)
 	{
 		ft_putstr("$> ");
-		get_next_line(0 ,&buf);
-		ft_putstr("buf ->");
+		// get_next_line(0 ,&buf);
+		read(0, buf, 1024);
+		ft_putstr("send ->");
 		ft_putendl(buf);
+		remove_back(buf);
 		write(socket, buf, sizeof(buf));
-		while ((r = read(socket, buf2, 1024)))
-		{
-			ft_putstr("recv buf -> ");
-			remove_back(buf2);
-			ft_putstr(buf2);
-		}
+		ft_bzero(buf , 1024);
+		read(socket, buf2, 1024);
+		ft_putstr("recv ->");
+		ft_putendl(buf2);
 		ft_bzero(buf2 , 1024);
 		// while (get_next_line(socket ,&buf) > 0)
 		// {

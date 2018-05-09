@@ -6,7 +6,7 @@
 /*   By: jtranchi <jtranchi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/20 11:57:35 by jtranchi          #+#    #+#             */
-/*   Updated: 2018/04/21 15:29:20 by jtranchi         ###   ########.fr       */
+/*   Updated: 2018/04/28 13:57:12 by jtranchi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,26 +45,33 @@ int		ft_create_serveur(int port)
 
 }
 
+void  exec_ls(char **tabl, int fd)
+{
+	int f;
+
+	f = fork();
+	printf("%s", tabl[1]);
+	if (f == 0) {
+		dup2(fd, 1);
+		dup2(fd, 2);
+		execve("/bin/ls", tabl, NULL);
+	}
+	wait(0);
+}
+
 
 void  check_builtin(char *str, int fd)
 {
-	char **tab;
-	int fds[2];
+	char **tabl;
 
-	pipe(fds);
-	tab = ft_strsplit(str, ' ');
-	if (ft_strcmp(tab[0], "ls") == 0)
-	{
-		int f = fork();
-		if (f == 0) {
-			dup2(fds[0], 1);
-			dup2(fds[1], fd);
-			execve("/bin/ls", tab, NULL);
-		}
-		wait(0);
-		close(fds[1]);
-		close(fds[0]);
+	tabl = ft_strsplit(str, ' ');
+
+	if (ft_strequ(tabl[0], "ls") == 1){
+		printf("ici\n");
+		exec_ls(tabl, fd);
 	}
+
+
 }
 
 int main(int argc, char **argv)
@@ -75,7 +82,6 @@ int main(int argc, char **argv)
 	struct sockaddr sin;
 	unsigned int sizesin;
 	char buf[1024];
-	int r;
 
 	int t;
 
@@ -87,17 +93,12 @@ int main(int argc, char **argv)
 	cs = accept(socket, &sin, &sizesin);
 	while (42)
 	{
-		// ft_putstr("ici");
-		// get_next_line(cs ,&buf);
-		// ft_putstr("buf -> ");
-		// ft_putendl(buf);
-		while ((r = read(cs, buf, 1024)))
-		{
-			ft_putstr("buf -> ");
-			ft_putendl(buf);
-			check_builtin(buf, cs);
-			ft_bzero(buf, 1024);
-		}
+		read(cs, buf, 1024);
+		ft_putstr("buf -> ");
+		ft_putendl(buf);
+		check_builtin(buf, cs);
+		ft_bzero(buf, 1024);
+		write(cs, &t, 1);
 	}
 	close(socket);
 }
