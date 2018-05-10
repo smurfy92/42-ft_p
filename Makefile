@@ -1,6 +1,9 @@
 SRC_S = srcs/serveur.c
 SRC_C = srcs/client.c
 
+NAME_S = serveur
+NAME_C = client
+
 OBJ_S = $(SRC_S:.c=.o)
 OBJ_C = $(SRC_C:.c=.o)
 
@@ -12,37 +15,44 @@ CE = \033[0m
 CB = \033[34m
 INC = -I ./includes/
 
-all: start
+all: start lib $(NAME_C) $(NAME_S)
+	
+
+lib:
 	-@make -C libft nohd
-	gcc -fsanitize=address -o ft_serve $(SRC_S) $(FLAG) $(INC) $(LIB);
-	gcc -o ft_client $(SRC_C) $(FLAG) $(INC) $(LIB);
 
+$(NAME_C): $(OBJ_C)	
+	@gcc -o $(NAME_C) $(SRC_C) $(FLAG) $(INC) $(LIB);
+	@echo "\033[K$(CY)[FT_P] :$(CE) $(CG)Compiling client$(CE)";
 
+$(NAME_S): $(OBJ_S)
+	@gcc -o $(NAME_S) $(SRC_S) $(FLAG) $(INC) $(LIB);
+	@echo "\033[K$(CY)[FT_P] :$(CE) $(CG)Compiling serveur$(CE)";
 
 start:
 	@echo "\n";
-	@echo "			$(CG)      ::::    :::   :::   :::    :::::::: ::::::::::: ::::::::   ::::::::  :::  $(CE)";
-	@echo "			$(CG)     :+:+:   :+:  :+:+: :+:+:  :+:    :+:    :+:    :+:    :+: :+:    :+: :+:   $(CE)";
-	@echo "			$(CG)    :+:+:+  +:+ +:+ +:+:+ +:+ +:+    +:+    +:+    +:+    +:+ +:+    +:+ +:+    $(CE)";
-	@echo "			$(CG)   +#+ +:+ +#+ +#+  +:+  +#+ +#+    +:+    +#+    +#+    +:+ +#+    +:+ +#+     $(CE)";
-	@echo "			$(CG)  +#+  +#+#+# +#+       +#+ +#+    +#+    +#+    +#+    +#+ +#+    +#+ +#+      $(CE)";
-	@echo "			$(CG) #+#   #+#+# #+#       #+# #+#    #+#    #+#    #+#    #+# #+#    #+# #+#       $(CE)";
-	@echo "			$(CG)###    #### ###       ###  ########     ###     ########   ########  ########## $(CE)";
+	@echo "			$(CG)      :::::::::: :::::::::::           ::::::::: $(CE)";
+	@echo "			$(CG)     :+:            :+:               :+:    :+: $(CE)";
+	@echo "			$(CG)    +:+            +:+               +:+    +:+  $(CE)";
+	@echo "			$(CG)   :#::+::#       +#+               +#++:++#+    $(CE)";
+	@echo "			$(CG)  +#+            +#+               +#+           $(CE)";
+	@echo "			$(CG) #+#            #+#               #+#            $(CE)";
+	@echo "			$(CG)###            ###    ########## ###             $(CE)";
 	@echo "\n";
 
 %.o: %.c
-	@echo "\033[K$(CY)[MALLOC] :$(CE) $(CG)Compiling $<$(CE) \033[1A";
+	@echo "\033[K$(CY)[FT_P] :$(CE) $(CG)Compiling $<$(CE)";
 	@gcc $(FLAG) -c $< -o $@ $(INC)
 
 clean: start
-	@echo "\033[K$(CY)[MALLOC] :$(CE) $(CG)Cleaning Malloc objects$(CE)\033[1A";
+	@echo "$(CY)[FT_P] :$(CE) $(CG)Cleaning ft_p objects$(CE)";
 	-@make -C libft nohdclean;
 	@/bin/rm -rf $(OBJ);
 
 fclean: start clean
-	@echo "\033[K$(CY)[MALLOC] :$(CE) $(CG)Cleaning 42sh ...$(CE)\033[1A";
+	@echo "\033[K$(CY)[FT_P] :$(CE) $(CG)Cleaning binairies ...$(CE)";
 	-@make -C libft nohdfclean;
-	@/bin/rm -f ft_nm ft_otool;
+	@/bin/rm -f $(NAME_S) $(NAME_C);
 
 re: fclean all
 

@@ -56,22 +56,45 @@ void  exec_ls(char **tabl, int fd)
 		dup2(fd, 2);
 		execve("/bin/ls", tabl, NULL);
 	}
-	wait(0);
+	wait4(f, 0, 0, NULL);
+}
+
+void exec_pwd(int fd)
+{
+	char *wd;
+	char *ret;
+
+	wd = NULL;
+	wd = getcwd(wd, 0);
+	ret = ft_strjoin(wd, "\n");
+	write(fd, ret, ft_strlen(ret));
+}
+
+void exec_exit(void)
+{
+	exit(0);
 }
 
 
-void  check_builtin(char *str, int fd)
+int  check_builtin(char *str, int fd)
 {
 	char **tabl;
 
 	tabl = ft_strsplit(str, ' ');
 
 	if (ft_strequ(tabl[0], "ls") == 1){
-		printf("ici\n");
 		exec_ls(tabl, fd);
+		return (0);
 	}
-
-
+	if (ft_strequ(tabl[0], "pwd") == 1){
+		exec_pwd(fd);
+		return (0);
+	}
+	if (ft_strequ(tabl[0], "quit") == 1){
+		exec_exit();
+		return (0);
+	}
+	return (-1);
 }
 
 int main(int argc, char **argv)
@@ -83,22 +106,30 @@ int main(int argc, char **argv)
 	unsigned int sizesin;
 	char buf[1024];
 
-	int t;
+	char *t;
 
-	t = 0;
+	t = ft_strdup("");
 	if (argc <= 1)
 		print_usage();
 	port = atoi(argv[1]);
 	socket = ft_create_serveur(port);
-	cs = accept(socket, &sin, &sizesin);
 	while (42)
 	{
-		read(cs, buf, 1024);
-		ft_putstr("buf -> ");
-		ft_putendl(buf);
-		check_builtin(buf, cs);
-		ft_bzero(buf, 1024);
-		write(cs, &t, 1);
+		cs = accept(socket, &sin, &sizesin);
+		printf("accepted -> %d\n", cs);
+		int f = fork();
+		if (f == 0){
+			while (42)
+			{
+				if (recv(cs, buf, 1024, 0) == 0)
+					exit(0);
+				printf("cs -> %d buf -> %s\n",cs,buf);
+				if (check_builtin(buf, cs) == -1){
+					write(cs, "", 1);
+				}
+				ft_bzero(buf, 1024);
+			}
+			close(socket);
+		}
 	}
-	close(socket);
 }

@@ -61,8 +61,6 @@ int main(int argc, char **argv)
 	int port;
 	int socket;
 	char buf[1024];
-	// int r;
-	char buf2[1024];
 	int t;
 
 
@@ -74,28 +72,15 @@ int main(int argc, char **argv)
 	while (42)
 	{
 		ft_putstr("$> ");
-		// get_next_line(0 ,&buf);
 		read(0, buf, 1024);
-		ft_putstr("send ->");
-		ft_putendl(buf);
 		remove_back(buf);
-		write(socket, buf, sizeof(buf));
+		send(socket, buf, sizeof(buf), 0);
+		if (ft_strequ(buf, "quit"))
+			break ;
 		ft_bzero(buf , 1024);
-		read(socket, buf2, 1024);
-		ft_putstr("recv ->");
-		ft_putendl(buf2);
-		ft_bzero(buf2 , 1024);
-		// while (get_next_line(socket ,&buf) > 0)
-		// {
-		// 	ft_putstr(buf);
-		// 	ft_putchar(' ');
-		// }
-		// ft_putchar('\n');
+		recv(socket, buf, 1024, 0);
+		ft_putstr(buf);
+		ft_bzero(buf , 1024);
 	}
-
-
-		// while ((r = read(socket, buf , 1024)))
-		// 	ft_putendl(buf);
-		// ft_bzero(buf , 1024);
 	close(socket);
 }
