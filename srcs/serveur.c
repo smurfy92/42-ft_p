@@ -50,7 +50,6 @@ void  exec_ls(char **tabl, int fd)
 	int f;
 
 	f = fork();
-	printf("%s", tabl[1]);
 	if (f == 0) {
 		dup2(fd, 1);
 		dup2(fd, 2);
@@ -70,18 +69,43 @@ void exec_pwd(int fd)
 	write(fd, ret, ft_strlen(ret));
 }
 
-void exec_exit(void)
+void write_error(char *str, int fd)
 {
-	exit(0);
+	str = ft_strjoin("ERROR: ", str);
+	write(fd, str, ft_strlen(str));
 }
 
+
+int exec_get(char **tabl, int fd)
+{
+	char buf[1025];
+	char *tmp;
+	int r;
+
+	if (!tabl[1]) {
+		write_error("please specify a file", fd);
+		return (-1);
+	} else {
+		int file = open(tabl[1], O_RDONLY);
+		tmp = ft_strjoin("data ", tabl[1]);
+		tmp = ft_strjoin(tmp, " ");
+		while ((r = read(file, buf, 1024))){
+			buf[1024] = 0;
+			tmp = ft_strjoin_nf(tmp, buf, 1);
+			ft_bzero(buf, 1024);
+			if (r < 1024)
+				break ;
+		}
+		write(fd, tmp, ft_strlen(tmp));
+	}
+	return (0);
+}
 
 int  check_builtin(char *str, int fd)
 {
 	char **tabl;
 
 	tabl = ft_strsplit(str, ' ');
-
 	if (ft_strequ(tabl[0], "ls") == 1){
 		exec_ls(tabl, fd);
 		return (0);
@@ -91,8 +115,10 @@ int  check_builtin(char *str, int fd)
 		return (0);
 	}
 	if (ft_strequ(tabl[0], "quit") == 1){
-		exec_exit();
-		return (0);
+		exit(0);
+	}
+	if (ft_strequ(tabl[0], "get") == 1){
+		return (exec_get(tabl, fd));
 	}
 	return (-1);
 }
