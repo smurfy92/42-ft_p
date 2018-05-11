@@ -47,7 +47,7 @@ start:
 clean: start
 	@echo "$(CY)[FT_P] :$(CE) $(CG)Cleaning ft_p objects$(CE)";
 	-@make -C libft nohdclean;
-	@/bin/rm -rf $(OBJ);
+	@/bin/rm -rf $(OBJ_C) $(OBJ_S);
 
 fclean: start clean
 	@echo "\033[K$(CY)[FT_P] :$(CE) $(CG)Cleaning binairies ...$(CE)";
