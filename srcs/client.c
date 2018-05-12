@@ -10,34 +10,52 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/ft_p.h"
-#include "errno.h"
+#include "../includes/client.h"
 
-void		print_usage(void)
+int		check_if_data(char *str)
 {
-	ft_putendl("usage : serveur <port>");
-	exit(0);
-}
+	char	**tabl;
+	char	*tmp;
+	int		fd;
 
-
-char *get_address(char *addr)
-{
-	struct hostent *host;
-
-	host = gethostbyname(addr);
-	if (!host){
-		ft_putendl("ERROR: not known host");
-		exit(-1);
+	tabl = ft_strsplit(str, ' ');
+	if (ft_strequ(tabl[0], "data") == 1 && tabl[1] && tabl[2])
+	{
+		fd = open(tabl[1], O_RDWR | O_CREAT, 0666);
+		tmp = &str[4 + 2 + ft_strlen(tabl[1])];
+		printf("fd -> %d\n", fd);
+		write(fd, tmp, ft_strlen(tmp));
 	}
-	return (inet_ntoa( *( struct in_addr*)( host->h_addr_list[0])));
+	else
+		return (-1);
+	return (0);
 }
 
-
-int		ft_create_client(char *addr, int port)
+void	loop(int socket)
 {
-	int sock;
-	struct protoent *p;
-	struct sockaddr_in sin;
+	char *buf;
+	char *tmp;
+
+	buf = ft_strnew(BUFFER);
+	while (42)
+	{
+		prompt(buf);
+		if (ft_strequ(buf, "quit"))
+			break ;
+		send(socket, buf, ft_strlen(buf), 0);
+		ft_bzero(buf, BUFFER);
+		tmp = read_fd(socket);
+		if (check_if_data(tmp) == -1)
+			ft_putstr(tmp);
+		ft_bzero(buf, BUFFER);
+	}
+}
+
+int			ft_create_client(char *addr, int port)
+{
+	int					sock;
+	struct protoent		*p;
+	struct sockaddr_in	sin;
 
 	p = getprotobyname("tcp");
 	if (p == 0)
@@ -58,68 +76,15 @@ int		ft_create_client(char *addr, int port)
 	return (sock);
 }
 
-void remove_back(char *str)
-{
-	int i;
-
-	i = -1;
-	while (str[++i])
-		if (str[i] == '\n')
-			str[i] = 0;
-}
-
-int check_if_data(char *str)
-{
-	char **tabl;
-
-	tabl = ft_strsplit(str, ' ');
-	if (ft_strequ(tabl[0], "data") == 1 && tabl[1] && tabl[2]) {
-		printf("filename -> %s\n", tabl[1]);
-		int fd = open(tabl[1], O_RDWR | O_CREAT, 0666);
-		printf("fd -> %d\n", fd);
-		write(fd, &str[4 + 2 + ft_strlen(tabl[1])], ft_strlen(&str[4 + 2 + ft_strlen(tabl[1])]));
-	} else {
-
-		return (-1);
-	}
-	return (0);
-}
-
-int main(int argc, char **argv)
+int		main(int argc, char **argv)
 {
 	int port;
 	int socket;
-	char *buf;
-	char *tmp;
-	int t;
 
-
-	t = 0;
 	if (argc <= 2)
 		print_usage();
 	port = atoi(argv[2]);
 	socket = ft_create_client(argv[1], port);
-	buf = ft_strnew(1025);
-	while (42)
-	{
-		tmp = ft_strdup("");
-		ft_putstr("$> ");
-		read(0, buf, 1024);
-		remove_back(buf);
-		send(socket, buf, ft_strlen(buf), 0);
-		if (ft_strequ(buf, "quit"))
-			break ;
-		ft_bzero(buf , 1024);
-		while ((t = recv(socket, buf, 1024, 0))){
-			buf[1024] = 0;
-			tmp = ft_strjoin(tmp, buf);
-			ft_bzero(buf, 1024);
-			if (t < 1024)
-				break ;
-		}
-		if (check_if_data(tmp) == -1)
-			ft_putstr(tmp);
-		ft_bzero(buf , 1024);
-	}
+	loop(socket);
 	close(socket);
 }

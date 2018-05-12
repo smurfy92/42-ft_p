@@ -1,5 +1,9 @@
 SRC_S = srcs/serveur.c
+SRC_S += srcs/serveur2.c
+SRC_S += srcs/common.c
 SRC_C = srcs/client.c
+SRC_C += srcs/client2.c
+SRC_C += srcs/common.c
 
 NAME_S = serveur
 NAME_C = client
@@ -8,7 +12,7 @@ OBJ_S = $(SRC_S:.c=.o)
 OBJ_C = $(SRC_C:.c=.o)
 
 LIB = libft/libft.a
-FLAG = -Wall -Werror -Wextra
+FLAG = -g -fsanitize=address -Wall -Werror -Wextra
 CG = \033[92m
 CY =  \033[93m
 CE = \033[0m
@@ -16,12 +20,12 @@ CB = \033[34m
 INC = -I ./includes/
 
 all: start lib $(NAME_C) $(NAME_S)
-	
+
 
 lib:
 	-@make -C libft nohd
 
-$(NAME_C): $(OBJ_C)	
+$(NAME_C): $(OBJ_C)
 	@gcc -o $(NAME_C) $(SRC_C) $(FLAG) $(INC) $(LIB);
 	@echo "\033[K$(CY)[FT_P] :$(CE) $(CG)Compiling client$(CE)";
 
