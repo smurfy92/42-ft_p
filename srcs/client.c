@@ -20,6 +20,19 @@ void		print_usage(void)
 }
 
 
+char *get_address(char *addr)
+{
+	struct hostent *host;
+
+	host = gethostbyname(addr);
+	if (!host){
+		ft_putendl("ERROR: not known host");
+		exit(-1);
+	}
+	return (inet_ntoa( *( struct in_addr*)( host->h_addr_list[0])));
+}
+
+
 int		ft_create_client(char *addr, int port)
 {
 	int sock;
@@ -29,17 +42,17 @@ int		ft_create_client(char *addr, int port)
 	p = getprotobyname("tcp");
 	if (p == 0)
 	{
-		printf("proto error\n");
+		ft_putendl("ERROR: protocol error");
 		exit(-1);
 	}
 	sock = socket(PF_INET, SOCK_STREAM, p->p_proto);
 	sin.sin_family = AF_INET;
 	sin.sin_port = htons(port);
-	sin.sin_addr.s_addr = inet_addr(addr);
+	;
+	sin.sin_addr.s_addr = inet_addr(get_address(addr));
 	if (connect(sock, (const struct sockaddr*)&sin, sizeof(sin)) == -1)
 	{
-		printf("connect error\n");
-		printf("err -> %s\n",strerror(errno));
+		ft_putendl("ERROR: connection error");
 		exit(-1);
 	}
 	return (sock);
@@ -62,7 +75,6 @@ int check_if_data(char *str)
 	tabl = ft_strsplit(str, ' ');
 	if (ft_strequ(tabl[0], "data") == 1 && tabl[1] && tabl[2]) {
 		printf("filename -> %s\n", tabl[1]);
-
 		int fd = open(tabl[1], O_RDWR | O_CREAT, 0666);
 		printf("fd -> %d\n", fd);
 		write(fd, &str[4 + 2 + ft_strlen(tabl[1])], ft_strlen(&str[4 + 2 + ft_strlen(tabl[1])]));

@@ -1,3 +1,4 @@
+
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -28,7 +29,7 @@ int		ft_create_serveur(int port)
 	p = getprotobyname("tcp");
 	if (p == 0)
 	{
-		printf("proto error\n");
+		ft_putendl("proto error");
 		exit(-1);
 	}
 	sock = socket(PF_INET, SOCK_STREAM, p->p_proto);
@@ -37,7 +38,7 @@ int		ft_create_serveur(int port)
 	sin.sin_addr.s_addr = htonl(INADDR_ANY);
 	if (bind(sock, (const struct sockaddr*)&sin, sizeof(sin)) == -1)
 	{
-		printf("bind error\n");
+		ft_putendl("bind error\n");
 		exit(-1);
 	}
 	listen(sock, 42);
@@ -69,10 +70,17 @@ void exec_pwd(int fd)
 	write(fd, ret, ft_strlen(ret));
 }
 
-void write_error(char *str, int fd)
+int write_error(char *cmd, char *err, int fd)
 {
-	str = ft_strjoin("ERROR: ", str);
+	char *str;
+
+	str = ft_strjoin("ERROR: ", cmd);
+	str = ft_strjoin_nf(str, ": ", 1);
+	str = ft_strjoin_nf(str, err, 1);
+	str = ft_strjoin_nf(str, "\n", 1);
 	write(fd, str, ft_strlen(str));
+	ft_strdel(&str);
+	return (-1);
 }
 
 
@@ -81,12 +89,15 @@ int exec_get(char **tabl, int fd)
 	char buf[1025];
 	char *tmp;
 	int r;
+	int file;
 
 	if (!tabl[1]) {
-		write_error("please specify a file", fd);
-		return (-1);
+		return (write_error("get", "please specify a file", fd));
 	} else {
-		int file = open(tabl[1], O_RDONLY);
+		file = open(tabl[1], O_RDONLY);
+		if (file < 0){
+			return (write_error("get", "file doesnt exists", fd));
+		}
 		tmp = ft_strjoin("data ", tabl[1]);
 		tmp = ft_strjoin(tmp, " ");
 		while ((r = read(file, buf, 1024))){
