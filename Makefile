@@ -12,7 +12,7 @@ OBJ_S = $(SRC_S:.c=.o)
 OBJ_C = $(SRC_C:.c=.o)
 
 LIB = libft/libft.a
-FLAG = -g -fsanitize=address -Wall -Werror -Wextra
+FLAG = -Wall -Werror -Wextra
 CG = \033[92m
 CY =  \033[93m
 CE = \033[0m
