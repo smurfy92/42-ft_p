@@ -35,6 +35,7 @@ int		exec_get(char **tabl, int fd)
 		tmp = ft_strjoin("data ", tabl[1]);
 		tmp = ft_strjoin_nf(tmp, " ", 1);
 		tmp = ft_strjoin_nf(tmp, read_fd(file), 3);
+
 		write(fd, tmp, ft_strlen(tmp));
 	}
 	return (0);

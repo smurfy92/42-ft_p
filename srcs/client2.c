@@ -41,9 +41,12 @@ void		remove_back(char *str)
 			str[i] = 0;
 }
 
-void		prompt(char *buf)
+char		*prompt()
 {
+	char *tmp;
+
 	ft_putstr("$> ");
-	read(0, buf, BUFFER);
-	remove_back(buf);
+	tmp = read_fd(0);
+	remove_back(tmp);
+	return (tmp);
 }

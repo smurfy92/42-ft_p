@@ -34,21 +34,21 @@ int		check_if_data(char *str)
 void	loop(int socket)
 {
 	char *buf;
-	char *tmp;
 
-	buf = ft_strnew(BUFFER);
+	buf = NULL;
 	while (42)
 	{
-		prompt(buf);
+		buf = prompt();
 		if (ft_strequ(buf, "quit"))
 			break ;
 		send(socket, buf, ft_strlen(buf), 0);
-		ft_bzero(buf, BUFFER);
-		tmp = read_fd(socket);
-		if (check_if_data(tmp) == -1)
-			ft_putstr(tmp);
-		ft_bzero(buf, BUFFER);
+		ft_strdel(&buf);
+		buf = read_fd(socket);
+		if (check_if_data(buf) == -1)
+			ft_putstr(buf);
+		ft_strdel(&buf);
 	}
+	ft_strdel(&buf);
 }
 
 int			ft_create_client(char *addr, int port)
@@ -66,7 +66,6 @@ int			ft_create_client(char *addr, int port)
 	sock = socket(PF_INET, SOCK_STREAM, p->p_proto);
 	sin.sin_family = AF_INET;
 	sin.sin_port = htons(port);
-	;
 	sin.sin_addr.s_addr = inet_addr(get_address(addr));
 	if (connect(sock, (const struct sockaddr*)&sin, sizeof(sin)) == -1)
 	{

@@ -20,7 +20,8 @@
 # include "../libft/includes/libft.h"
 # define BUFFER 1024
 
-void	prompt(char *buf);
+char	*prompt();
+void	remove_back(char *str);
 void	print_usage(void);
 int		ft_create_client(char *addr, int port);
 char	*read_fd(int fd);
