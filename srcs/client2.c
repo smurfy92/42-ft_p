@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/client.h"
+#include "../includes/serveur.h"
 
 void		print_usage(void)
 {
@@ -41,12 +41,12 @@ void		remove_back(char *str)
 			str[i] = 0;
 }
 
-char		*prompt()
+t_buf		*prompt()
 {
-	char *tmp;
+	t_buf *tmp;
 
 	ft_putstr("$> ");
 	tmp = read_fd(0);
-	remove_back(tmp);
+	remove_back(tmp->str);
 	return (tmp);
 }

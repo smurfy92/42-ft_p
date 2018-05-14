@@ -10,29 +10,46 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/client.h"
 #include "../includes/serveur.h"
 
-char	*read_fd(int fd)
+t_buf	*read_fd(int fd)
 {
 	int		r;
-	int		total;
-	char	*tmp;
+	t_buf	*tmp;
 	char	*buf;
+	void 	*test;
 
 	buf = ft_strnew(BUFFER + 1);
-	tmp = ft_strdup("");
-	total = 0;
+	tmp = (t_buf *)malloc(sizeof(t_buf));
+
+	tmp->str = ft_strdup("");
+	tmp->len = 0;
 	while ((r = read(fd, buf, BUFFER)))
 	{
-		total += r;
-		buf[BUFFER] = 0;
-		tmp = ft_strjoin_nf(tmp, buf, 1);
+		buf[r] = 0;
+		test = ft_strnew(tmp->len + r + 1);
+		ft_memcpy(test, tmp->str, tmp->len);
+		ft_memcpy(&test[tmp->len], buf, r);
+		tmp->len += r;
+		ft_strdel(&tmp->str);
+		tmp->str = ft_strnew(tmp->len);
+		ft_memcpy(tmp->str, test, tmp->len);
+		tmp->str[tmp->len + 1] = 0;
 		ft_bzero(buf, BUFFER);
 		if (r < BUFFER)
 			break ;
 	}
-	printf("total - > %d \n", total);
 	ft_strdel(&buf);
 	return (tmp);
+}
+
+
+void	write_fd(int fd, t_buf *buf)
+{
+	int i;
+
+	i = -1;
+	while (++i < buf->len)
+		write(fd, &buf->str[i], 1);
+	write(fd, "\n", 1);
 }

@@ -20,9 +20,12 @@ void	print_usage(void)
 
 int		exec_get(char **tabl, int fd)
 {
-	char	*tmp;
+	t_buf	*tmp;
 	int		file;
+	t_buf	*buf;
 
+	tmp = NULL;
+	tmp = (t_buf*)malloc(sizeof(t_buf));
 	if (!tabl[1])
 	{
 		write_error("get", "please specify a file", fd);
@@ -32,11 +35,12 @@ int		exec_get(char **tabl, int fd)
 		file = open(tabl[1], O_RDONLY);
 		if (file < 0)
 			return (write_error("get", "file doesnt exists", fd));
-		tmp = ft_strjoin("data ", tabl[1]);
-		tmp = ft_strjoin_nf(tmp, " ", 1);
-		tmp = ft_strjoin_nf(tmp, read_fd(file), 3);
-
-		write(fd, tmp, ft_strlen(tmp));
+		tmp->str = ft_strjoin("data ", tabl[1]);
+		tmp->str = ft_strjoin_nf(tmp->str, " ", 1);
+		tmp->len = ft_strlen(tmp->str);
+		write_fd(fd, tmp);
+		buf = read_fd(file);
+		write_fd(fd, buf);
 	}
 	return (0);
 }
