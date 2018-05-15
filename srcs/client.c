@@ -23,8 +23,7 @@ int		check_if_data(t_mem *mem)
 	{
 		fd = open(tabl[1], O_RDWR | O_CREAT, 0666);
 		i = 4 + 2 + ft_strlen(tabl[1]) - 1;
-		mem->len -= 1;
-		while (++i <= mem->len)
+		while (++i < mem->len)
 			write(fd, &mem->data[i], 1);
 	}
 	else
