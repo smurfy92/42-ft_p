@@ -20,23 +20,24 @@
 # include "../libft/includes/libft.h"
 # define BUFFER 1024
 
-typedef struct			s_buf
+typedef struct			s_mem
 {
-	char				*str;
+	char				*data;
 	int					len;
-}						t_buf;
+}						t_mem;
 
 int		exec_ls(char **tabl, int fd);
 int		exec_pwd(int fd);
 int		exec_get(char **tabl, int fd);
 
-t_buf	*prompt();
-void	remove_back(char *str);
+t_mem	*prompt();
+void	remove_back(t_mem *mem);
 
 void	print_usage(void);
 int		write_error(char *cmd, char *err, int fd);
-t_buf	*read_fd(int fd);
-void	write_fd(int fd, t_buf *buf);
+t_mem	*read_fd(int fd);
+void	write_fd(int fd, t_mem *buf);
+t_mem	*ft_memjoin(t_mem *dest, t_mem *src);
 
 int		ft_create_client(char *addr, int port);
 char	*get_address(char *addr);

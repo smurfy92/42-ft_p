@@ -12,19 +12,20 @@
 
 #include "../includes/serveur.h"
 
-int		check_if_data(t_buf *buf)
+int		check_if_data(t_mem *mem)
 {
 	char	**tabl;
 	int		fd;
 	int i;
 
-	tabl = ft_strsplit(buf->str, ' ');
+	tabl = ft_strsplit(mem->data, ' ');
 	if (ft_strequ(tabl[0], "data") == 1 && tabl[1] && tabl[2])
 	{
 		fd = open(tabl[1], O_RDWR | O_CREAT, 0666);
 		i = 4 + 2 + ft_strlen(tabl[1]) - 1;
-		while (++i < buf->len)
-			write(fd, &buf->str[i], 1);
+		mem->len -= 1;
+		while (++i <= mem->len)
+			write(fd, &mem->data[i], 1);
 	}
 	else
 		return (-1);
@@ -33,23 +34,22 @@ int		check_if_data(t_buf *buf)
 
 void	loop(int socket)
 {
-	t_buf  *buf;
+	t_mem  *mem;
+	t_mem  *mem2;
 
-	buf = NULL;
+	mem = NULL;
 	while (42)
 	{
-		buf = prompt();
-		if (ft_strequ(buf->str, "quit"))
+		mem = prompt();
+		if (ft_strequ(mem->data, "quit"))
 			break ;
-		send(socket, buf->str, buf->len, 0);
-		ft_strdel(&buf->str);
-		buf = read_fd(socket);
-		printf("len -> %d\n", buf->len);
-		if (check_if_data(buf) == -1)
-			ft_putstr(buf->str);
-		ft_strdel(&buf->str);
+		send(socket, mem->data, mem->len, 0);
+		ft_strdel(&mem->data);
+		mem2 = read_fd(socket);
+		if (check_if_data(mem2) == -1)
+			ft_putstr(mem2->data);
+		ft_strdel(&mem2->data);
 	}
-	ft_strdel(&buf->str);
 }
 
 int			ft_create_client(char *addr, int port)

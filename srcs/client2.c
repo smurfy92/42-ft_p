@@ -31,22 +31,29 @@ char		*get_address(char *addr)
 	return (inet_ntoa(*(struct in_addr*)(host->h_addr_list[0])));
 }
 
-void		remove_back(char *str)
+void		remove_back(t_mem *mem)
 {
 	int i;
 
 	i = -1;
-	while (str[++i])
-		if (str[i] == '\n')
-			str[i] = 0;
+	while (mem->data[++i])
+	{
+		if (mem->data[i] == '\n')
+		{
+			mem->data[i] = 0;
+			break ;
+		}
+	}
+	mem->len = i;
+
 }
 
-t_buf		*prompt()
+t_mem		*prompt()
 {
-	t_buf *tmp;
+	t_mem *mem;
 
 	ft_putstr("$> ");
-	tmp = read_fd(0);
-	remove_back(tmp->str);
-	return (tmp);
+	mem = read_fd(0);
+	remove_back(mem);
+	return (mem);
 }
