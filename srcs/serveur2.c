@@ -72,15 +72,21 @@ int		exec_pwd(int fd)
 	return (0);
 }
 
-int		write_error(char *cmd, char *err, int fd)
+int		check_if_data(t_mem *mem)
 {
-	char *str;
+	char	**tabl;
+	int		fd;
+	int i;
 
-	str = ft_strjoin("ERROR: ", cmd);
-	str = ft_strjoin_nf(str, ": ", 1);
-	str = ft_strjoin_nf(str, err, 1);
-	str = ft_strjoin_nf(str, "\n", 1);
-	write(fd, str, ft_strlen(str));
-	ft_strdel(&str);
-	return (-1);
+	tabl = ft_strsplit(mem->data, ' ');
+	if (ft_strequ(tabl[0], "data") == 1 && tabl[1] && tabl[2])
+	{
+		fd = open(tabl[1], O_RDWR | O_CREAT, 0666);
+		i = 4 + 2 + ft_strlen(tabl[1]) - 1;
+		while (++i < mem->len)
+			write(fd, &mem->data[i], 1);
+	}
+	else
+		return (-1);
+	return (0);
 }

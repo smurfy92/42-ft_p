@@ -74,3 +74,16 @@ t_mem	*ft_memjoin(t_mem *dest, t_mem *src)
 	ft_memcpy((void*)&ret->data[dest->len], src->data, src->len);
 	return (ret);
 }
+
+int		write_error(char *cmd, char *err, int fd)
+{
+	char *str;
+
+	str = ft_strjoin("ERROR: ", cmd);
+	str = ft_strjoin_nf(str, ": ", 1);
+	str = ft_strjoin_nf(str, err, 1);
+	str = ft_strjoin_nf(str, "\n", 1);
+	write(fd, str, ft_strlen(str));
+	ft_strdel(&str);
+	return (-1);
+}

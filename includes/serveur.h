@@ -38,8 +38,10 @@ int		write_error(char *cmd, char *err, int fd);
 t_mem	*read_fd(int fd);
 void	write_fd(int fd, t_mem *buf);
 t_mem	*ft_memjoin(t_mem *dest, t_mem *src);
+int		check_if_data(t_mem *mem);
 
 int		ft_create_client(char *addr, int port);
 char	*get_address(char *addr);
+int		write_error(char *cmd, char *err, int fd);
 
 #endif

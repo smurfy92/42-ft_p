@@ -37,11 +37,11 @@ int		ft_create_serveur(int port)
 	return (sock);
 }
 
-int		check_builtin(char *str, int fd)
+int		check_builtin(t_mem *mem, int fd)
 {
 	char **tabl;
 
-	tabl = ft_strsplit(str, ' ');
+	tabl = ft_strsplit(mem->data, ' ');
 	if (ft_strequ(tabl[0], "ls") == 1)
 		return (exec_ls(tabl, fd));
 	if (ft_strequ(tabl[0], "pwd") == 1)
@@ -50,12 +50,14 @@ int		check_builtin(char *str, int fd)
 		exit(0);
 	if (ft_strequ(tabl[0], "get") == 1)
 		return (exec_get(tabl, fd));
+	if (ft_strequ(tabl[0], "data") == 1)
+		return (check_if_data(mem));
 	return (-1);
 }
 
 void	create_client(int cs)
 {
-	char	buf[1025];
+	t_mem *mem;
 	int f;
 
 	f = fork();
@@ -63,12 +65,10 @@ void	create_client(int cs)
 	{
 		while (42)
 		{
-			if (recv(cs, buf, BUFFER, 0) == 0)
-				exit(0);
-			printf("cs -> %d buf -> %s\n", cs, buf);
-			if (check_builtin(buf, cs) == -1)
+			mem = read_fd(cs);
+			printf("cs -> %d buf -> %s\n", cs, mem->data);
+			if (check_builtin(mem, cs) == -1)
 				write(cs, "", 1);
-			ft_bzero(buf, BUFFER);
 		}
 	}
 }
