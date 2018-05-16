@@ -37,7 +37,7 @@ int		ft_create_serveur(int port)
 	return (sock);
 }
 
-int		check_builtin(t_mem *mem, int fd)
+int		check_builtin(t_mem *mem, int fd, char *wd)
 {
 	char **tabl;
 
@@ -52,6 +52,8 @@ int		check_builtin(t_mem *mem, int fd)
 		return (exec_get(tabl, fd));
 	if (ft_strequ(tabl[0], "data") == 1)
 		return (check_put_data(mem, fd));
+	if (ft_strequ(tabl[0], "cd") == 1)
+		return (exec_cd(mem, wd ,fd));
 	return (-1);
 }
 
@@ -59,15 +61,19 @@ void	create_client(int cs)
 {
 	t_mem	*mem;
 	int		f;
+	char	*wd;
 
 	f = fork();
 	if (f == 0)
 	{
+		wd = NULL;
+		wd = getcwd(wd, 0);
+		printf(" pwd -> %s\n", wd);
 		while (42)
 		{
 			mem = read_fd(cs);
-			printf("cs -> %d buf -> %s\n", cs, mem->data);
-			if (check_builtin(mem, cs) == -1)
+			printf("cs -> %d buf -> %s len -> %d\n", cs, mem->data, mem->len);
+			if (check_builtin(mem, cs, wd) == -1)
 				write(cs, "", 1);
 		}
 	}

@@ -29,6 +29,7 @@ typedef struct		s_mem
 int					exec_ls(char **tabl, int fd);
 int					exec_pwd(int fd);
 int					exec_get(char **tabl, int fd);
+int					exec_cd(t_mem *mem, char *wd, int fd);
 
 t_mem				*prompt();
 void				remove_back(t_mem *mem);

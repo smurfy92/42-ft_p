@@ -41,9 +41,7 @@ int		check_put(int fd, t_mem **mem)
 	tmp = (t_mem*)malloc(sizeof(t_mem));
 	tabl = ft_strsplit((*mem)->data, ' ');
 	if (!tabl[1])
-	{
 		write_error("put", "please specify a file", fd);
-	}
 	else
 	{
 		file = open(tabl[1], O_RDONLY);
@@ -73,12 +71,15 @@ void	loop(int socket)
 			break ;
 		if (ft_strequ(tabl[0], "put") == 1)
 			check_put(socket, &mem);
-		write_fd(socket, mem);
+		if (mem->len > 0)
+		{
+			write_fd(socket, mem);
 		ft_strdel(&mem->data);
 		mem2 = read_fd(socket);
 		if (check_if_data(mem2) == -1)
 			ft_putstr(mem2->data);
 		ft_strdel(&mem2->data);
+		}
 	}
 }
 
@@ -91,7 +92,7 @@ int		ft_create_client(char *addr, int port)
 	p = getprotobyname("tcp");
 	if (p == 0)
 	{
-		ft_putendl("ERROR: protocol error");
+		write_error("connection", "protocol error", 1);
 		exit(-1);
 	}
 	sock = socket(PF_INET, SOCK_STREAM, p->p_proto);
@@ -100,7 +101,7 @@ int		ft_create_client(char *addr, int port)
 	sin.sin_addr.s_addr = inet_addr(get_address(addr));
 	if (connect(sock, (const struct sockaddr*)&sin, sizeof(sin)) == -1)
 	{
-		ft_putendl("ERROR: connection error");
+		write_error("connection", "connect error", 1);
 		exit(-1);
 	}
 	return (sock);
