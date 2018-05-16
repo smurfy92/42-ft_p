@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/serveur.h"
+#include "../includes/ftp.h"
 
 void	print_usage(void)
 {
@@ -76,7 +76,7 @@ int		check_if_data(t_mem *mem)
 {
 	char	**tabl;
 	int		fd;
-	int i;
+	int		i;
 
 	tabl = ft_strsplit(mem->data, ' ');
 	if (ft_strequ(tabl[0], "data") == 1 && tabl[1] && tabl[2])

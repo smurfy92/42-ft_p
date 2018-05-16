@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/serveur.h"
+#include "../includes/ftp.h"
 
 void		print_usage(void)
 {
@@ -45,10 +45,9 @@ void		remove_back(t_mem *mem)
 		}
 	}
 	mem->len = i;
-
 }
 
-t_mem		*prompt()
+t_mem		*prompt(void)
 {
 	t_mem *mem;
 

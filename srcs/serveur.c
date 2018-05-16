@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/serveur.h"
+#include "../includes/ftp.h"
 
 int		ft_create_serveur(int port)
 {
@@ -57,8 +57,8 @@ int		check_builtin(t_mem *mem, int fd)
 
 void	create_client(int cs)
 {
-	t_mem *mem;
-	int f;
+	t_mem	*mem;
+	int		f;
 
 	f = fork();
 	if (f == 0)

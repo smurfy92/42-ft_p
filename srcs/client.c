@@ -10,13 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/serveur.h"
+#include "../includes/ftp.h"
 
 int		check_if_data(t_mem *mem)
 {
 	char	**tabl;
 	int		fd;
-	int i;
+	int		i;
 
 	tabl = ft_strsplit(mem->data, ' ');
 	if (ft_strequ(tabl[0], "data") == 1 && tabl[1] && tabl[2])
@@ -31,7 +31,7 @@ int		check_if_data(t_mem *mem)
 	return (0);
 }
 
-int check_put(int fd, t_mem *mem)
+int		check_put(int fd, t_mem *mem)
 {
 	t_mem	*tmp;
 	int		file;
@@ -61,8 +61,8 @@ int check_put(int fd, t_mem *mem)
 
 void	loop(int socket)
 {
-	t_mem  *mem;
-	t_mem  *mem2;
+	t_mem	*mem;
+	t_mem	*mem2;
 
 	mem = NULL;
 	while (42)
@@ -79,11 +79,10 @@ void	loop(int socket)
 				ft_putstr(mem2->data);
 			ft_strdel(&mem2->data);
 		}
-
 	}
 }
 
-int			ft_create_client(char *addr, int port)
+int		ft_create_client(char *addr, int port)
 {
 	int					sock;
 	struct protoent		*p;

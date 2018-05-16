@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SERVEUR_H
-# define SERVEUR_H
+#ifndef FTP_H
+# define FTP_H
 
 # include <sys/socket.h>
 # include <netdb.h>
