@@ -72,25 +72,6 @@ int		exec_pwd(int fd)
 	return (0);
 }
 
-int		check_if_data(t_mem *mem)
-{
-	char	**tabl;
-	int		fd;
-	int		i;
-
-	tabl = ft_strsplit(mem->data, ' ');
-	if (ft_strequ(tabl[0], "data") == 1 && tabl[1] && tabl[2])
-	{
-		fd = open(tabl[1], O_RDWR | O_CREAT, 0666);
-		i = 4 + 2 + ft_strlen(tabl[1]) - 1;
-		while (++i < mem->len)
-			write(fd, &mem->data[i], 1);
-	}
-	else
-		return (-1);
-	return (0);
-}
-
 int		check_put_data(t_mem *mem, int socket)
 {
 	char	**tabl;
