@@ -14,31 +14,21 @@
 
 t_mem	*read_fd(int fd)
 {
-	int		r;
 	t_mem	*mem;
-	char	*buf;
-	void	*test;
+	t_mem	*buf;
 
-	buf = ft_strnew(BUFFER + 1);
-	mem = (t_mem *)malloc(sizeof(t_mem));
-	mem->data = ft_strdup("");
-	mem->len = 0;
-	while ((r = read(fd, buf, BUFFER)))
+	mem = NULL;
+	buf = (t_mem *)malloc(sizeof(t_mem));
+	buf->data = ft_strnew(BUFFER + 1);
+	buf->len = 0;
+	while ((buf->len = read(fd, buf->data, BUFFER)))
 	{
-		buf[r] = 0;
-		test = ft_strnew(mem->len + r + 1);
-		ft_memcpy(test, mem->data, mem->len);
-		ft_memcpy(&test[mem->len], buf, r);
-		mem->len += r;
-		ft_strdel(&mem->data);
-		mem->data = ft_strnew(mem->len);
-		ft_memcpy(mem->data, test, mem->len);
-		mem->data[mem->len + 1] = 0;
-		ft_bzero(buf, BUFFER);
-		if (r < BUFFER)
+		mem = ft_memjoin(mem, buf);
+		ft_bzero(buf->data, buf->len);
+		if (buf->len < BUFFER)
 			break ;
+		buf->len = 0;
 	}
-	ft_strdel(&buf);
 	return (mem);
 }
 
@@ -61,6 +51,13 @@ t_mem	*ft_memjoin(t_mem *dest, t_mem *src)
 	t_mem *ret;
 
 	ret = (t_mem *)malloc(sizeof(t_mem));
+	if (!dest)
+	{
+		ret->data = ft_strnew(src->len);
+		ft_memcpy(ret->data, src->data, src->len);
+		ret->len = src->len;
+		return (ret);
+	}
 	ret->len = dest->len + src->len;
 	ret->data = ft_strnew(ret->len);
 	ft_memcpy((void*)ret->data, dest->data, dest->len);

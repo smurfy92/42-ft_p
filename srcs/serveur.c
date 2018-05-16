@@ -51,7 +51,7 @@ int		check_builtin(t_mem *mem, int fd)
 	if (ft_strequ(tabl[0], "get") == 1)
 		return (exec_get(tabl, fd));
 	if (ft_strequ(tabl[0], "data") == 1)
-		return (check_if_data(mem));
+		return (check_put_data(mem, fd));
 	return (-1);
 }
 

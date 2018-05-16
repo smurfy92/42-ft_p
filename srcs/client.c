@@ -31,7 +31,7 @@ int		check_if_data(t_mem *mem)
 	return (0);
 }
 
-int		check_put(int fd, t_mem *mem)
+int		check_put(int fd, t_mem **mem)
 {
 	t_mem	*tmp;
 	int		file;
@@ -39,7 +39,7 @@ int		check_put(int fd, t_mem *mem)
 
 	tmp = NULL;
 	tmp = (t_mem*)malloc(sizeof(t_mem));
-	tabl = ft_strsplit(mem->data, ' ');
+	tabl = ft_strsplit((*mem)->data, ' ');
 	if (!tabl[1])
 	{
 		write_error("put", "please specify a file", fd);
@@ -52,9 +52,8 @@ int		check_put(int fd, t_mem *mem)
 		tmp->data = ft_strjoin("data ", tabl[1]);
 		tmp->data = ft_strjoin_nf(tmp->data, " ", 1);
 		tmp->len = ft_strlen(tmp->data);
-		mem = read_fd(file);
-		mem = ft_memjoin(tmp, mem);
-		write_fd(fd, mem);
+		*mem = read_fd(file);
+		*mem = ft_memjoin(tmp, *mem);
 	}
 	return (0);
 }
@@ -63,22 +62,23 @@ void	loop(int socket)
 {
 	t_mem	*mem;
 	t_mem	*mem2;
+	char	**tabl;
 
 	mem = NULL;
 	while (42)
 	{
 		mem = prompt();
-		if (ft_strequ(mem->data, "quit"))
+		tabl = ft_strsplit(mem->data, ' ');
+		if (ft_strequ(tabl[0], "quit") == 1)
 			break ;
-		if (!ft_strequ(mem->data, "put") && check_put(socket, mem) != 0)
-		{
-			send(socket, mem->data, mem->len, 0);
-			ft_strdel(&mem->data);
-			mem2 = read_fd(socket);
-			if (check_if_data(mem2) == -1)
-				ft_putstr(mem2->data);
-			ft_strdel(&mem2->data);
-		}
+		if (ft_strequ(tabl[0], "put") == 1)
+			check_put(socket, &mem);
+		write_fd(socket, mem);
+		ft_strdel(&mem->data);
+		mem2 = read_fd(socket);
+		if (check_if_data(mem2) == -1)
+			ft_putstr(mem2->data);
+		ft_strdel(&mem2->data);
 	}
 }
 

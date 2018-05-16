@@ -36,7 +36,7 @@ void		remove_back(t_mem *mem)
 	int i;
 
 	i = -1;
-	while (mem->data[++i])
+	while (++i < mem->len)
 	{
 		if (mem->data[i] == '\n')
 		{
