@@ -6,29 +6,22 @@
 /*   By: jtranchi <jtranchi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/20 11:57:35 by jtranchi          #+#    #+#             */
-/*   Updated: 2018/04/21 15:29:20 by jtranchi         ###   ########.fr       */
+/*   Updated: 2018/04/28 13:57:12 by jtranchi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/ft_p.h"
-
-void		print_usage(void)
-{
-	ft_putendl("usage : serveur <port>");
-	exit(0);
-}
-
+#include "../includes/ftp.h"
 
 int		ft_create_serveur(int port)
 {
-	int sock;
-	struct protoent *p;
-	struct sockaddr_in sin;
+	int					sock;
+	struct protoent		*p;
+	struct sockaddr_in	sin;
 
 	p = getprotobyname("tcp");
 	if (p == 0)
 	{
-		printf("proto error\n");
+		ft_putendl("proto error");
 		exit(-1);
 	}
 	sock = socket(PF_INET, SOCK_STREAM, p->p_proto);
@@ -37,67 +30,72 @@ int		ft_create_serveur(int port)
 	sin.sin_addr.s_addr = htonl(INADDR_ANY);
 	if (bind(sock, (const struct sockaddr*)&sin, sizeof(sin)) == -1)
 	{
-		printf("bind error\n");
+		ft_putendl("bind error\n");
 		exit(-1);
 	}
 	listen(sock, 42);
 	return (sock);
-
 }
 
-
-void  check_builtin(char *str, int fd)
+int		check_builtin(t_mem *mem, int fd, char *wd)
 {
-	char **tab;
-	int fds[2];
+	char **tabl;
 
-	pipe(fds);
-	tab = ft_strsplit(str, ' ');
-	if (ft_strcmp(tab[0], "ls") == 0)
+	tabl = ft_strsplit(mem->data, ' ');
+	if (ft_strequ(tabl[0], "ls") == 1)
+		return (exec_ls(tabl, fd));
+	if (ft_strequ(tabl[0], "pwd") == 1)
+		return (exec_pwd(fd));
+	if (ft_strequ(tabl[0], "quit") == 1)
+		exit(0);
+	if (ft_strequ(tabl[0], "get") == 1)
+		return (exec_get(tabl, fd));
+	if (ft_strequ(tabl[0], "data") == 1)
+		return (check_put_data(mem, fd));
+	if (ft_strequ(tabl[0], "cd") == 1)
+		return (exec_cd(mem, wd ,fd));
+	return (-1);
+}
+
+void	create_client(int cs)
+{
+	t_mem	*mem;
+	int		f;
+	char	*wd;
+
+	f = fork();
+	if (f == 0)
 	{
-		int f = fork();
-		if (f == 0) {
-			dup2(fds[0], 1);
-			dup2(fds[1], fd);
-			execve("/bin/ls", tab, NULL);
+		wd = NULL;
+		wd = getcwd(wd, 0);
+		printf(" pwd -> %s\n", wd);
+		while (42)
+		{
+			mem = read_fd(cs);
+			printf("cs -> %d buf -> %s len -> %d\n", cs, mem->data, mem->len);
+			if (check_builtin(mem, cs, wd) == -1)
+				write(cs, "", 1);
 		}
-		wait(0);
-		close(fds[1]);
-		close(fds[0]);
 	}
 }
 
-int main(int argc, char **argv)
+int		main(int argc, char **argv)
 {
-	int port;
-	int socket;
-	int cs;
-	struct sockaddr sin;
-	unsigned int sizesin;
-	char buf[1024];
-	int r;
+	int					port;
+	int					socket;
+	int					cs;
+	struct sockaddr		sin;
+	unsigned int		sizesin;
 
-	int t;
-
-	t = 0;
 	if (argc <= 1)
 		print_usage();
 	port = atoi(argv[1]);
 	socket = ft_create_serveur(port);
-	cs = accept(socket, &sin, &sizesin);
 	while (42)
 	{
-		// ft_putstr("ici");
-		// get_next_line(cs ,&buf);
-		// ft_putstr("buf -> ");
-		// ft_putendl(buf);
-		while ((r = read(cs, buf, 1024)))
-		{
-			ft_putstr("buf -> ");
-			ft_putendl(buf);
-			check_builtin(buf, cs);
-			ft_bzero(buf, 1024);
-		}
+		cs = accept(socket, &sin, &sizesin);
+		printf("accepted -> %d\n", cs);
+		create_client(cs);
 	}
 	close(socket);
 }

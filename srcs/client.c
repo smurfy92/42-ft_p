@@ -6,96 +6,116 @@
 /*   By: jtranchi <jtranchi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/20 12:04:45 by jtranchi          #+#    #+#             */
-/*   Updated: 2018/04/21 14:59:51 by jtranchi         ###   ########.fr       */
+/*   Updated: 2018/04/28 13:51:21 by jtranchi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/ft_p.h"
-#include "errno.h"
+#include "../includes/ftp.h"
 
-void		print_usage(void)
+int		check_if_data(t_mem *mem)
 {
-	ft_putendl("usage : serveur <port>");
-	exit(0);
+	char	**tabl;
+	int		fd;
+	int		i;
+
+	tabl = ft_strsplit(mem->data, ' ');
+	if (ft_strequ(tabl[0], "data") == 1 && tabl[1] && tabl[2])
+	{
+		fd = open(tabl[1], O_RDWR | O_CREAT, 0666);
+		i = 4 + 2 + ft_strlen(tabl[1]) - 1;
+		while (++i < mem->len)
+			write(fd, &mem->data[i], 1);
+	}
+	else
+		return (-1);
+	return (0);
 }
 
+int		check_put(int fd, t_mem **mem)
+{
+	t_mem	*tmp;
+	int		file;
+	char	**tabl;
+
+	tmp = NULL;
+	tmp = (t_mem*)malloc(sizeof(t_mem));
+	tabl = ft_strsplit((*mem)->data, ' ');
+	if (!tabl[1])
+		write_error("put", "please specify a file", fd);
+	else
+	{
+		file = open(tabl[1], O_RDONLY);
+		if (file < 0)
+			return (write_error("put", "file doesnt exists", fd));
+		tmp->data = ft_strjoin("data ", tabl[1]);
+		tmp->data = ft_strjoin_nf(tmp->data, " ", 1);
+		tmp->len = ft_strlen(tmp->data);
+		*mem = read_fd(file);
+		*mem = ft_memjoin(tmp, *mem);
+	}
+	return (0);
+}
+
+void	loop(int socket)
+{
+	t_mem	*mem;
+	t_mem	*mem2;
+	char	**tabl;
+
+	mem = NULL;
+	while (42)
+	{
+		mem = prompt();
+		tabl = ft_strsplit(mem->data, ' ');
+		if (ft_strequ(tabl[0], "quit") == 1)
+			break ;
+		if (ft_strequ(tabl[0], "put") == 1)
+			check_put(socket, &mem);
+		if (mem->len > 0)
+		{
+			write_fd(socket, mem);
+		ft_strdel(&mem->data);
+		mem2 = read_fd(socket);
+		if (check_if_data(mem2) == -1)
+			ft_putstr(mem2->data);
+		ft_strdel(&mem2->data);
+		}
+	}
+}
 
 int		ft_create_client(char *addr, int port)
 {
-	int sock;
-	struct protoent *p;
-	struct sockaddr_in sin;
+	int					sock;
+	struct protoent		*p;
+	struct sockaddr_in	sin;
 
 	p = getprotobyname("tcp");
 	if (p == 0)
 	{
-		printf("proto error\n");
+		write_error("connection", "protocol error", 1);
 		exit(-1);
 	}
 	sock = socket(PF_INET, SOCK_STREAM, p->p_proto);
 	sin.sin_family = AF_INET;
 	sin.sin_port = htons(port);
-	sin.sin_addr.s_addr = inet_addr(addr);
+	sin.sin_addr.s_addr = inet_addr(get_address(addr));
 	if (connect(sock, (const struct sockaddr*)&sin, sizeof(sin)) == -1)
 	{
-		printf("connect error\n");
-		printf("err -> %s\n",strerror(errno));
+		write_error("connection", "connect error", 1);
 		exit(-1);
 	}
 	return (sock);
-
 }
 
-void remove_back(char *str)
-{
-	int i;
-
-	i = -1;
-	while (str[++i])
-		if (str[i] == '\n')
-			str[i] = ' ';
-}
-
-int main(int argc, char **argv)
+int		main(int argc, char **argv)
 {
 	int port;
 	int socket;
-	char *buf;
-	int r;
-	char buf2[1024];
-	int t;
 
-
-	t = 0;
 	if (argc <= 2)
 		print_usage();
 	port = atoi(argv[2]);
 	socket = ft_create_client(argv[1], port);
-	while (42)
-	{
-		ft_putstr("$> ");
-		get_next_line(0 ,&buf);
-		ft_putstr("buf ->");
-		ft_putendl(buf);
-		write(socket, buf, sizeof(buf));
-		while ((r = read(socket, buf2, 1024)))
-		{
-			ft_putstr("recv buf -> ");
-			remove_back(buf2);
-			ft_putstr(buf2);
-		}
-		ft_bzero(buf2 , 1024);
-		// while (get_next_line(socket ,&buf) > 0)
-		// {
-		// 	ft_putstr(buf);
-		// 	ft_putchar(' ');
-		// }
-		// ft_putchar('\n');
-	}
-
-
-		// while ((r = read(socket, buf , 1024)))
-		// 	ft_putendl(buf);
-		// ft_bzero(buf , 1024);
+	loop(socket);
 	close(socket);
 }

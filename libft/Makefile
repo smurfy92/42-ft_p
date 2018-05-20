@@ -94,14 +94,10 @@ all: $(LIB)
 $(LIB): start $(OBJ)
 	@echo "\033[K$(CY)[LIBFT] :$(CE) $(CG)Creating Library$(CE)\033[1A";
 	@$(AR) $(LIB) $(OBJ)
-	@echo "\033[K$(CY)[LIBFT] :$(CE) $(CG)Indexing Library$(CE)\033[1A";
-	@$(AR) $(LIB) $(OBJ)
 	@$(RANLIB) $(LIB)
 
 nohd: $(OBJ)
 	@echo "\033[K$(CY)[LIBFT] :$(CE) $(CG)Creating Library$(CE)\033[1A";
-	@$(AR) $(LIB) $(OBJ)
-	@echo "\033[K$(CY)[LIBFT] :$(CE) $(CG)Indexing Library$(CE)";
 	@$(AR) $(LIB) $(OBJ)
 	@$(RANLIB) $(LIB)
 
