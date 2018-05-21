@@ -20,10 +20,7 @@ char	*remove_last_dir(char *wd)
 	ret = NULL;
 	i = ft_strlen(wd);
 	while (wd[i] != '/')
-	{
-		ft_putchar(wd[i]);
 		i--;
-	}
 	ret = ft_strnew(i);
 	ft_memcpy(ret, wd, i);
 	return (ret);
@@ -55,10 +52,8 @@ int		check_if_contains(char *wd, char *newwd)
 
 	i = -1;
 	while (wd[++i])
-	{
 		if (wd[i] != newwd[i])
 			return (0);
-	}
 	return (1);
 }
 
@@ -74,10 +69,11 @@ int		exec_cd(t_mem *mem, char *wd, int socket)
 	curwd = getcwd(curwd, 0);
 	if (!tabl[1])
 		chdir(wd);
-	else if (tabl[1][0] != '.')
+	else if (tabl[1][0] != '.' && tabl[1][0] != '/')
 	{
-		if (check_if_contains(wd, tabl[1]))
-			chdir(tabl[1]);
+		curwd = ft_strjoin(curwd, "/");
+		curwd = ft_strjoin(curwd, tabl[1]);
+		chdir(curwd);
 	}
 	else
 	{
