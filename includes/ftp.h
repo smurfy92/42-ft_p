@@ -46,4 +46,7 @@ int					ft_create_client(char *addr, int port);
 char				*get_address(char *addr);
 int					write_error(char *cmd, char *err, int fd);
 
+void				ft_free_tabl(char **tabl);
+void				ft_free_mem(t_mem *mem);
+
 #endif

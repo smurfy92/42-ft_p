@@ -53,7 +53,7 @@ int		check_builtin(t_mem *mem, int fd, char *wd)
 	if (ft_strequ(tabl[0], "data") == 1)
 		return (check_put_data(mem, fd));
 	if (ft_strequ(tabl[0], "cd") == 1)
-		return (exec_cd(mem, wd ,fd));
+		return (exec_cd(mem, wd, fd));
 	return (-1);
 }
 
@@ -68,11 +68,9 @@ void	create_client(int cs)
 	{
 		wd = NULL;
 		wd = getcwd(wd, 0);
-		printf(" pwd -> %s\n", wd);
 		while (42)
 		{
 			mem = read_fd(cs);
-			printf("cs -> %d buf -> %s len -> %d\n", cs, mem->data, mem->len);
 			if (check_builtin(mem, cs, wd) == -1)
 				write(cs, "", 1);
 		}
@@ -94,7 +92,6 @@ int		main(int argc, char **argv)
 	while (42)
 	{
 		cs = accept(socket, &sin, &sizesin);
-		printf("accepted -> %d\n", cs);
 		create_client(cs);
 	}
 	close(socket);
