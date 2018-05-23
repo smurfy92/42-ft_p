@@ -81,7 +81,7 @@ int		ft_create_client(char *addr, int port)
 {
 	int					sock;
 	struct protoent		*p;
-	struct sockaddr_in	sin;
+	struct sockaddr_in6	sin;
 
 	p = getprotobyname("tcp");
 	if (p == 0)
@@ -89,10 +89,10 @@ int		ft_create_client(char *addr, int port)
 		write_error("connection", "protocol error", 1);
 		exit(-1);
 	}
-	sock = socket(PF_INET, SOCK_STREAM, p->p_proto);
-	sin.sin_family = AF_INET;
-	sin.sin_port = htons(port);
-	sin.sin_addr.s_addr = inet_addr(get_address(addr));
+	sock = socket(AF_INET6, SOCK_STREAM, p->p_proto);
+	sin.sin6_family = AF_INET6;
+	sin.sin6_port = htons(port);
+	inet_pton(AF_INET6, addr, &sin.sin6_addr);
 	if (connect(sock, (const struct sockaddr*)&sin, sizeof(sin)) == -1)
 	{
 		write_error("connection", "connect error", 1);

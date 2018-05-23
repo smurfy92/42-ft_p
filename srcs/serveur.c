@@ -16,7 +16,7 @@ int		ft_create_serveur(int port)
 {
 	int					sock;
 	struct protoent		*p;
-	struct sockaddr_in	sin;
+	struct sockaddr_in6	sin;
 
 	p = getprotobyname("tcp");
 	if (p == 0)
@@ -24,10 +24,10 @@ int		ft_create_serveur(int port)
 		ft_putendl("proto error");
 		exit(-1);
 	}
-	sock = socket(PF_INET, SOCK_STREAM, p->p_proto);
-	sin.sin_family = AF_INET;
-	sin.sin_port = htons(port);
-	sin.sin_addr.s_addr = htonl(INADDR_ANY);
+	sock = socket(AF_INET6, SOCK_STREAM, p->p_proto);
+	sin.sin6_family = AF_INET6;
+	sin.sin6_port = htons(port);
+	sin.sin6_addr = in6addr_any;
 	if (bind(sock, (const struct sockaddr*)&sin, sizeof(sin)) == -1)
 	{
 		ft_putendl("bind error\n");
@@ -72,7 +72,6 @@ void	create_client(int cs)
 		{
 			mem = read_fd(cs);
 			remove_back(mem);
-			printf("cs -> %d data -> %s\n", cs, mem->data);
 			if (check_builtin(mem, cs, wd) == -1)
 				write(cs, "", 1);
 		}
@@ -81,11 +80,11 @@ void	create_client(int cs)
 
 int		main(int argc, char **argv)
 {
-	int					port;
-	int					socket;
-	int					cs;
-	struct sockaddr		sin;
-	unsigned int		sizesin;
+	int						port;
+	int						socket;
+	int						cs;
+	struct sockaddr_in6		sin;
+	unsigned int			sizesin;
 
 	if (argc <= 1)
 		print_usage();
@@ -93,7 +92,7 @@ int		main(int argc, char **argv)
 	socket = ft_create_serveur(port);
 	while (42)
 	{
-		cs = accept(socket, &sin, &sizesin);
+		printf("ici\n");
 		create_client(cs);
 	}
 	close(socket);

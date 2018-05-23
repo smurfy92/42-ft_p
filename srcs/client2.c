@@ -18,19 +18,6 @@ void		print_usage(void)
 	exit(0);
 }
 
-char		*get_address(char *addr)
-{
-	struct hostent *host;
-
-	host = gethostbyname(addr);
-	if (!host)
-	{
-		ft_putendl("ERROR: not known host");
-		exit(-1);
-	}
-	return (inet_ntoa(*(struct in_addr*)(host->h_addr_list[0])));
-}
-
 t_mem		*prompt(void)
 {
 	t_mem *mem;
