@@ -59,11 +59,14 @@ void	loop(int socket)
 	while (42)
 	{
 		mem = prompt();
+		remove_back(mem);
 		tabl = ft_strsplit(mem->data, ' ');
 		if (ft_strequ(tabl[0], "quit") == 1)
 			break ;
 		if (ft_strequ(tabl[0], "put") == 1)
 			check_put(&mem);
+		if (ft_strequ(tabl[0], "lls") == 1)
+			exec_lls(&mem, tabl);
 		if (mem->len > 0)
 		{
 			write_fd(socket, mem);

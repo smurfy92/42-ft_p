@@ -48,3 +48,14 @@ int			check_if_data(t_mem *mem)
 	ft_free_tabl(tabl);
 	return (ret);
 }
+
+void		exec_lls(t_mem **mem, char **tabl)
+{
+	int	f;
+
+	f = fork();
+	if (f == 0)
+		execve("/bin/ls", tabl, NULL);
+	wait4(f, 0, 0, NULL);
+	(*mem)->len = 0;
+}

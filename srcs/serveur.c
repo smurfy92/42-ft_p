@@ -71,7 +71,7 @@ void	create_client(int cs)
 		while (42)
 		{
 			mem = read_fd(cs);
-			remove_back(mem);
+			printf("cs -> %d data -> %s\n", cs, mem->data);
 			if (check_builtin(mem, cs, wd) == -1)
 				write(cs, "", 1);
 		}
@@ -92,7 +92,7 @@ int		main(int argc, char **argv)
 	socket = ft_create_serveur(port);
 	while (42)
 	{
-		printf("ici\n");
+		cs = accept(socket, (struct sockaddr *)&sin, &sizesin);
 		create_client(cs);
 	}
 	close(socket);

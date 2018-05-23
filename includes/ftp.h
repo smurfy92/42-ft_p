@@ -30,6 +30,7 @@ int					exec_ls(char **tabl, int fd);
 int					exec_pwd(int fd);
 int					exec_get(char **tabl, int fd);
 int					exec_cd(t_mem *mem, char *wd, int fd);
+void				exec_lls(t_mem **mem, char **tabl);
 
 t_mem				*prompt();
 void				remove_back(t_mem *mem);
