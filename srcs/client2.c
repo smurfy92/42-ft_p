@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jtranchi <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jtranchi <jtranchi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/12 15:15:11 by jtranchi          #+#    #+#             */
-/*   Updated: 2018/05/12 15:15:12 by jtranchi         ###   ########.fr       */
+/*   Updated: 2018/05/23 18:51:02 by jtranchi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,8 @@ void		print_usage(void)
 
 t_mem		*prompt(void)
 {
-	t_mem *mem;
-
 	ft_putstr("$> ");
-	mem = read_fd(0);
-	return (mem);
+	return (read_fd(0));
 }
 
 int			check_if_data(t_mem *mem)
