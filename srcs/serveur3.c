@@ -30,8 +30,11 @@ int		exec_get(char **tabl, int fd)
 		tmp->data = ft_strjoin("data ", tabl[1]);
 		tmp->data = ft_strjoin_nf(tmp->data, " ", 1);
 		tmp->len = ft_strlen(tmp->data);
-		mem = read_fd(file);
-		mem = ft_memjoin(tmp, mem);
+		if (tabl[2])
+			mem = ft_memjoin(tmp, read_fd(file));
+		else
+			mem = tmp;
+		close(file);
 		write_fd(fd, mem);
 	}
 	return (0);

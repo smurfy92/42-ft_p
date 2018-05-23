@@ -40,3 +40,19 @@ int		write_error(char *cmd, char *err, int fd)
 	ft_strdel(&str);
 	return (-1);
 }
+
+void	remove_back(t_mem *mem)
+{
+	int i;
+
+	i = -1;
+	while (++i < mem->len)
+	{
+		if (mem->data[i] == '\n')
+		{
+			mem->data[i] = 0;
+			break ;
+		}
+	}
+	mem->len = i;
+}
