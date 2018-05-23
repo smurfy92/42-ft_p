@@ -59,3 +59,15 @@ void		exec_lls(t_mem **mem, char **tabl)
 	wait4(f, 0, 0, NULL);
 	(*mem)->len = 0;
 }
+
+void		exec_lpwd(t_mem **mem)
+{
+	char *wd;
+	char *ret;
+
+	wd = NULL;
+	wd = getcwd(wd, 0);
+	ret = ft_strjoin(wd, "\n");
+	write(1, ret, ft_strlen(ret));
+	(*mem)->len = 0;
+}

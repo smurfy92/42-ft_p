@@ -54,8 +54,11 @@ void	loop(int socket)
 	t_mem	*mem;
 	t_mem	*mem2;
 	char	**tabl;
+	char	*wd;
 
 	mem = NULL;
+	wd = NULL;
+	wd = getcwd(wd, 0);
 	while (42)
 	{
 		mem = prompt();
@@ -67,6 +70,10 @@ void	loop(int socket)
 			check_put(&mem);
 		if (ft_strequ(tabl[0], "lls") == 1)
 			exec_lls(&mem, tabl);
+		if (ft_strequ(tabl[0], "lpwd") == 1)
+			exec_lpwd(&mem);
+		if (ft_strequ(tabl[0], "lcd") == 1)
+			exec_lcd(mem, wd);
 		if (mem->len > 0)
 		{
 			write_fd(socket, mem);

@@ -8,7 +8,7 @@ SRC_C = srcs/client.c
 SRC_C += srcs/client2.c
 SRC_C += srcs/common.c
 SRC_C += srcs/common2.c
-
+SRC_C += srcs/cd.c
 
 NAME_S = serveur
 NAME_C = client
