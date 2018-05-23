@@ -29,6 +29,7 @@ t_mem	*read_fd(int fd)
 			break ;
 		buf->len = 0;
 	}
+	ft_free_mem(buf);
 	return (mem);
 }
 
@@ -62,18 +63,6 @@ t_mem	*ft_memjoin(t_mem *dest, t_mem *src)
 	ret->data = ft_strnew(ret->len);
 	ft_memcpy((void*)ret->data, dest->data, dest->len);
 	ft_memcpy((void*)&ret->data[dest->len], src->data, src->len);
+	ft_free_mem(dest);
 	return (ret);
-}
-
-int		write_error(char *cmd, char *err, int fd)
-{
-	char *str;
-
-	str = ft_strjoin("ERROR: ", cmd);
-	str = ft_strjoin_nf(str, ": ", 1);
-	str = ft_strjoin_nf(str, err, 1);
-	str = ft_strjoin_nf(str, "\n", 1);
-	write(fd, str, ft_strlen(str));
-	ft_strdel(&str);
-	return (-1);
 }

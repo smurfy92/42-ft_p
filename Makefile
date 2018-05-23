@@ -1,11 +1,14 @@
 SRC_S = srcs/serveur.c
 SRC_S += srcs/serveur2.c
+SRC_S += srcs/serveur3.c
 SRC_S += srcs/common.c
+SRC_S += srcs/common2.c
 SRC_S += srcs/cd.c
 SRC_C = srcs/client.c
 SRC_C += srcs/client2.c
 SRC_C += srcs/common.c
-
+SRC_C += srcs/common2.c
+SRC_C += srcs/cd.c
 
 NAME_S = serveur
 NAME_C = client

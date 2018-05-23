@@ -30,6 +30,9 @@ int					exec_ls(char **tabl, int fd);
 int					exec_pwd(int fd);
 int					exec_get(char **tabl, int fd);
 int					exec_cd(t_mem *mem, char *wd, int fd);
+void				exec_lls(t_mem **mem, char **tabl);
+void				exec_lpwd(t_mem **mem);
+int					exec_lcd(t_mem *mem, char *wd);
 
 t_mem				*prompt();
 void				remove_back(t_mem *mem);
@@ -45,5 +48,8 @@ int					check_put_data(t_mem *mem, int socket);
 int					ft_create_client(char *addr, int port);
 char				*get_address(char *addr);
 int					write_error(char *cmd, char *err, int fd);
+
+void				ft_free_tabl(char **tabl);
+void				ft_free_mem(t_mem *mem);
 
 #endif
