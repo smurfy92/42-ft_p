@@ -71,8 +71,8 @@ int		exec_cd(t_mem *mem, char *wd, int socket)
 		chdir(wd);
 	else if (tabl[1][0] != '.' && tabl[1][0] != '/')
 	{
-		curwd = ft_strjoin(curwd, "/");
-		curwd = ft_strjoin(curwd, tabl[1]);
+		curwd = ft_strjoin_nf(curwd, "/", 1);
+		curwd = ft_strjoin_nf(curwd, tabl[1], 1);
 		chdir(curwd);
 	}
 	else
@@ -81,6 +81,7 @@ int		exec_cd(t_mem *mem, char *wd, int socket)
 		if (check_if_contains(wd, newwd))
 			chdir(newwd);
 	}
+	ft_strdel(&curwd);
 	ft_free_tabl(tabl);
 	write(socket, "", 1);
 	return (0);
@@ -89,28 +90,24 @@ int		exec_cd(t_mem *mem, char *wd, int socket)
 int		exec_lcd(t_mem *mem, char *wd)
 {
 	char	**tabl;
-	char	*newwd;
 	char	*curwd;
 
 	tabl = ft_strsplit(mem->data, ' ');
 	curwd = NULL;
-	newwd = NULL;
 	curwd = getcwd(curwd, 0);
 	if (!tabl[1])
 		chdir(wd);
 	else if (tabl[1][0] != '.' && tabl[1][0] != '/')
 	{
-		curwd = ft_strjoin(curwd, "/");
-		curwd = ft_strjoin(curwd, tabl[1]);
+		curwd = ft_strjoin_nf(curwd, "/", 1);
+		curwd = ft_strjoin_nf(curwd, tabl[1], 1);
 		chdir(curwd);
 	}
 	else if (tabl[1][0] == '.' || tabl[1][0] == '/')
 		chdir(tabl[1]);
 	else
-	{
-		newwd = parse_wd(curwd, tabl[1]);
-		chdir(newwd);
-	}
+		chdir(parse_wd(curwd, tabl[1]));
+	ft_strdel(&curwd);
 	ft_free_tabl(tabl);
 	return (0);
 }

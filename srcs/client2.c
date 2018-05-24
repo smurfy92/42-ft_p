@@ -64,7 +64,7 @@ void		exec_lpwd(t_mem **mem)
 
 	wd = NULL;
 	wd = getcwd(wd, 0);
-	ret = ft_strjoin(wd, "\n");
+	ret = ft_strjoin_nf(wd, "\n", 1);
 	write(1, ret, ft_strlen(ret));
 	ft_strdel(&ret);
 	(*mem)->len = 0;

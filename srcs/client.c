@@ -55,6 +55,7 @@ void	loop(int socket)
 		ft_free_tabl(tabl);
 		ft_free_mem(mem);
 	}
+	ft_strdel(&wd);
 }
 
 int		ft_create_client(char *addr, int port)

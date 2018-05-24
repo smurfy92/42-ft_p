@@ -71,7 +71,8 @@ int		exec_pwd(int fd)
 
 	wd = NULL;
 	wd = getcwd(wd, 0);
-	ret = ft_strjoin(wd, "\n");
+	ret = ft_strjoin_nf(wd, "\n", 1);
 	write(fd, ret, ft_strlen(ret));
+	ft_strdel(&ret);
 	return (0);
 }

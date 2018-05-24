@@ -29,9 +29,7 @@ int		check_put_data(t_mem *mem, int socket)
 	tabl = ft_strsplit(mem->data, ' ');
 	if (ft_strequ(tabl[0], "data") == 1 && tabl[1])
 	{
-		printf("filename -> %s\n", tabl[1]);
 		fd = open(tabl[1], O_RDWR | O_CREAT, 0666);
-		printf("fd -> %d\n", fd);
 		i = 4 + 1 + ft_strlen(tabl[1]);
 		while (++i < mem->len)
 			write(fd, &mem->data[i], 1);
