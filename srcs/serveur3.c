@@ -66,3 +66,13 @@ int		exec_pwd(int fd)
 	write(fd, ret, ft_strlen(ret));
 	return (0);
 }
+
+int		exec_mkdir(char **tabl, int fd)
+{
+	if (!tabl[1])
+		return (write_error("mkdir", "missing argument", fd));
+	if (mkdir(tabl[1], 0777) == -1)
+		return (write_error("mkdir", "error", fd));
+	write(fd, "", 1);
+	return (0);
+}

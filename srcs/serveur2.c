@@ -29,9 +29,8 @@ int		check_if_data(t_mem *mem)
 	tabl = ft_strsplit(mem->data, ' ');
 	if (ft_strequ(tabl[0], "data") == 1 && tabl[1])
 	{
-		printf("ici2\n");
 		fd = open(tabl[1], O_RDWR | O_CREAT, 0666);
-		i = 4 + 2 + ft_strlen(tabl[1]) - 1;
+		i = 4 + 1 + ft_strlen(tabl[1]);
 		while (++i < mem->len)
 			write(fd, &mem->data[i], 1);
 		ret = 0;
@@ -52,7 +51,7 @@ int		check_put_data(t_mem *mem, int socket)
 	if (ft_strequ(tabl[0], "data") == 1 && tabl[1])
 	{
 		fd = open(tabl[1], O_RDWR | O_CREAT, 0666);
-		i = 4 + 2 + ft_strlen(tabl[1]) - 1;
+		i = 4 + 1 + ft_strlen(tabl[1]);
 		while (++i < mem->len)
 			write(fd, &mem->data[i], 1);
 		write(socket, "", 1);

@@ -21,7 +21,7 @@ int		ft_create_serveur(int port)
 	p = getprotobyname("tcp");
 	if (p == 0)
 	{
-		ft_putendl("proto error");
+		write_error("connection", "proto error", 1);
 		exit(-1);
 	}
 	sock = socket(AF_INET6, SOCK_STREAM, p->p_proto);
@@ -30,7 +30,7 @@ int		ft_create_serveur(int port)
 	sin.sin6_addr = in6addr_any;
 	if (bind(sock, (const struct sockaddr*)&sin, sizeof(sin)) == -1)
 	{
-		ft_putendl("bind error\n");
+		write_error("connection", "bind error", 1);
 		exit(-1);
 	}
 	listen(sock, 42);
@@ -54,6 +54,8 @@ int		check_builtin(t_mem *mem, int fd, char *wd)
 		return (check_put_data(mem, fd));
 	if (ft_strequ(tabl[0], "cd") == 1)
 		return (exec_cd(mem, wd, fd));
+	if (ft_strequ(tabl[0], "mkdir") == 1)
+		return (exec_mkdir(tabl, fd));
 	return (-1);
 }
 

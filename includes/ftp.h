@@ -18,6 +18,7 @@
 # include <stdio.h>
 # include <arpa/inet.h>
 # include "../libft/includes/libft.h"
+#include <sys/stat.h>
 # define BUFFER 1024
 
 typedef struct		s_mem
@@ -33,6 +34,7 @@ int					exec_cd(t_mem *mem, char *wd, int fd);
 void				exec_lls(t_mem **mem, char **tabl);
 void				exec_lpwd(t_mem **mem);
 int					exec_lcd(t_mem *mem, char *wd);
+int					exec_mkdir(char **tabl, int fd);
 
 t_mem				*prompt();
 void				remove_back(t_mem *mem);
