@@ -56,6 +56,10 @@ int		check_builtin(t_mem *mem, int fd, char *wd)
 		return (exec_cd(mem, wd, fd));
 	if (ft_strequ(tabl[0], "mkdir") == 1)
 		return (exec_mkdir(tabl, fd));
+	if (ft_strequ(tabl[0], "rmdir") == 1)
+		return (exec_rmdir(tabl, fd));
+	if (ft_strequ(tabl[0], "unlink") == 1)
+		return (exec_unlink(tabl, fd));
 	return (-1);
 }
 
@@ -73,7 +77,7 @@ void	create_client(int cs)
 		while (42)
 		{
 			mem = read_fd(cs);
-			printf("cs -> %d data -> %s\n", cs, mem->data);
+			printf("cs -> %d buf -> %s\n", cs, mem->data);
 			if (check_builtin(mem, cs, wd) == -1)
 				write(cs, "", 1);
 		}

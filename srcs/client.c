@@ -13,39 +13,18 @@
 #include "../includes/ftp.h"
 #include <errno.h>
 
-void	check_put2(char **tabl, t_mem *tmp, t_mem **mem)
+int		check_builtin(char **tabl, t_mem **mem, char *wd)
 {
-	int		file;
-
-	if ((file = open(tabl[1], O_RDONLY)) < 0)
-	{
-		ft_free_tabl(tabl);
-		write_error("put", "file doesnt exists", 2);
-	}
-	tmp->data = ft_strjoin("data ", tabl[1]);
-	tmp->data = ft_strjoin_nf(tmp->data, " ", 1);
-	tmp->len = ft_strlen(tmp->data);
-	if (tabl[2])
-		*mem = ft_memjoin(tmp, read_fd(file));
-	else
-		*mem = tmp;
-	close(file);
-}
-
-int		check_put(t_mem **mem)
-{
-	t_mem	*tmp;
-	char	**tabl;
-
-	tmp = NULL;
-	tmp = (t_mem*)malloc(sizeof(t_mem));
-	remove_back(*mem);
-	tabl = ft_strsplit((*mem)->data, ' ');
-	if (!tabl[1])
-		write_error("put", "please specify a file", 2);
-	else
-		check_put2(tabl, tmp, mem);
-	ft_free_tabl(tabl);
+	if (ft_strequ(tabl[0], "quit") == 1)
+		return (-1);
+	if (ft_strequ(tabl[0], "put") == 1)
+		check_put(mem);
+	if (ft_strequ(tabl[0], "lls") == 1)
+		exec_lls(mem, tabl);
+	if (ft_strequ(tabl[0], "lpwd") == 1)
+		exec_lpwd(mem);
+	if (ft_strequ(tabl[0], "lcd") == 1)
+		exec_lcd(*mem, wd);
 	return (0);
 }
 
@@ -56,7 +35,6 @@ void	loop(int socket)
 	char	**tabl;
 	char	*wd;
 
-	mem = NULL;
 	wd = NULL;
 	wd = getcwd(wd, 0);
 	while (42)
@@ -64,16 +42,8 @@ void	loop(int socket)
 		mem = prompt();
 		remove_back(mem);
 		tabl = ft_strsplit(mem->data, ' ');
-		if (ft_strequ(tabl[0], "quit") == 1)
+		if (check_builtin(tabl, &mem, wd) == -1)
 			break ;
-		if (ft_strequ(tabl[0], "put") == 1)
-			check_put(&mem);
-		if (ft_strequ(tabl[0], "lls") == 1)
-			exec_lls(&mem, tabl);
-		if (ft_strequ(tabl[0], "lpwd") == 1)
-			exec_lpwd(&mem);
-		if (ft_strequ(tabl[0], "lcd") == 1)
-			exec_lcd(mem, wd);
 		if (mem->len > 0)
 		{
 			write_fd(socket, mem);

@@ -36,7 +36,7 @@ int			check_if_data(t_mem *mem)
 	if (ft_strequ(tabl[0], "data") == 1 && tabl[1])
 	{
 		fd = open(tabl[1], O_RDWR | O_CREAT, 0666);
-		i = 4 + 2 + ft_strlen(tabl[1]) - 1;
+		i = 4 + 1 + ft_strlen(tabl[1]);
 		while (++i < mem->len)
 			write(fd, &mem->data[i], 1);
 		ret = 0;
@@ -66,5 +66,6 @@ void		exec_lpwd(t_mem **mem)
 	wd = getcwd(wd, 0);
 	ret = ft_strjoin(wd, "\n");
 	write(1, ret, ft_strlen(ret));
+	ft_strdel(&ret);
 	(*mem)->len = 0;
 }
