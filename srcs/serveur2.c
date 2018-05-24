@@ -34,6 +34,7 @@ int		check_put_data(t_mem *mem, int socket)
 		while (++i < mem->len)
 			write(fd, &mem->data[i], 1);
 		write(socket, "", 1);
+		close(fd);
 		ret = 0;
 	}
 	ft_free_tabl(tabl);

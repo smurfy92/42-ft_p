@@ -35,7 +35,8 @@ int			check_if_data(t_mem *mem)
 	tabl = ft_strsplit(mem->data, ' ');
 	if (ft_strequ(tabl[0], "data") == 1 && tabl[1])
 	{
-		fd = open(tabl[1], O_RDWR | O_CREAT, 0666);
+		if ((fd = open(tabl[1], O_RDWR | O_CREAT, 0666)) < 0)
+			write_error("get", "Permission denied", 1);
 		i = 4 + 1 + ft_strlen(tabl[1]);
 		while (++i < mem->len)
 			write(fd, &mem->data[i], 1);

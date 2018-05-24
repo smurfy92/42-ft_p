@@ -46,8 +46,6 @@ int		check_builtin(t_mem *mem, int fd, char *wd)
 		return (exec_ls(tabl, fd));
 	if (ft_strequ(tabl[0], "pwd") == 1)
 		return (exec_pwd(fd));
-	if (ft_strequ(tabl[0], "quit") == 1)
-		exit(0);
 	if (ft_strequ(tabl[0], "get") == 1)
 		return (exec_get(tabl, fd));
 	if (ft_strequ(tabl[0], "data") == 1)
@@ -77,10 +75,11 @@ void	create_client(int cs)
 		while (42)
 		{
 			mem = read_fd(cs);
-			printf("cs -> %d buf -> %s\n", cs, mem->data);
 			if (check_builtin(mem, cs, wd) == -1)
 				write(cs, "", 1);
+			ft_free_mem(mem);
 		}
+		ft_strdel(&wd);
 	}
 }
 

@@ -28,10 +28,20 @@ int		check_builtin(char **tabl, t_mem **mem, char *wd)
 	return (0);
 }
 
+void	write_to_server(int socket, t_mem *mem)
+{
+	t_mem	*mem2;
+
+	write_fd(socket, mem);
+	mem2 = read_fd(socket);
+	if (check_if_data(mem2) == -1)
+		ft_putstr(mem2->data);
+	ft_free_mem(mem2);
+}
+
 void	loop(int socket)
 {
 	t_mem	*mem;
-	t_mem	*mem2;
 	char	**tabl;
 	char	*wd;
 
@@ -43,15 +53,13 @@ void	loop(int socket)
 		remove_back(mem);
 		tabl = ft_strsplit(mem->data, ' ');
 		if (check_builtin(tabl, &mem, wd) == -1)
-			break ;
-		if (mem->len > 0)
 		{
-			write_fd(socket, mem);
-			mem2 = read_fd(socket);
-			if (check_if_data(mem2) == -1)
-				ft_putstr(mem2->data);
-			ft_free_mem(mem2);
+			ft_free_tabl(tabl);
+			ft_free_mem(mem);
+			break ;
 		}
+		if (mem->len > 0)
+			write_to_server(socket, mem);
 		ft_free_tabl(tabl);
 		ft_free_mem(mem);
 	}
