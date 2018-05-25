@@ -76,7 +76,7 @@ void	create_client(int cs)
 		{
 			mem = read_fd(cs);
 			if (check_builtin(mem, cs, wd) == -1)
-				write(cs, "", 1);
+				write_error("command not found", mem->data, cs);
 			ft_free_mem(mem);
 		}
 		ft_strdel(&wd);

@@ -40,6 +40,7 @@ int			check_if_data(t_mem *mem)
 		i = 4 + 1 + ft_strlen(tabl[1]);
 		while (++i < mem->len)
 			write(fd, &mem->data[i], 1);
+		write_success("get", 1);
 		ret = 0;
 		close(fd);
 	}
