@@ -72,6 +72,7 @@ int		exec_pwd(int fd)
 	wd = NULL;
 	wd = getcwd(wd, 0);
 	ret = ft_strjoin_nf(wd, "\n", 1);
+	ret = ft_strjoin_nf("\033[92mSUCCESS: pwd: \033[0m\n", ret, 2);
 	write(fd, ret, ft_strlen(ret));
 	ft_strdel(&ret);
 	return (0);

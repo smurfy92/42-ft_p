@@ -25,6 +25,8 @@ int		check_builtin(char **tabl, t_mem **mem, char *wd)
 		exec_lpwd(mem);
 	if (ft_strequ(tabl[0], "lcd") == 1)
 		exec_lcd(*mem, wd);
+	if (ft_strequ(tabl[0], "ls") == 1)
+		write_success("ls", 1);
 	return (0);
 }
 
@@ -56,6 +58,7 @@ void	loop(int socket)
 		{
 			ft_free_tabl(tabl);
 			ft_free_mem(mem);
+			write_success("quit", 1);
 			break ;
 		}
 		if (mem->len > 0)

@@ -33,7 +33,7 @@ int		check_put_data(t_mem *mem, int socket)
 		i = 4 + 1 + ft_strlen(tabl[1]);
 		while (++i < mem->len)
 			write(fd, &mem->data[i], 1);
-		write(socket, "", 1);
+		write_success("put", socket);
 		close(fd);
 		ret = 0;
 	}

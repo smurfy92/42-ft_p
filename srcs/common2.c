@@ -32,10 +32,10 @@ int		write_error(char *cmd, char *err, int fd)
 {
 	char *str;
 
-	str = ft_strjoin("ERROR: ", cmd);
+	str = ft_strjoin("\033[91mERROR: ", cmd);
 	str = ft_strjoin_nf(str, ": ", 1);
 	str = ft_strjoin_nf(str, err, 1);
-	str = ft_strjoin_nf(str, "\n", 1);
+	str = ft_strjoin_nf(str, "\n\033[0m", 1);
 	write(fd, str, ft_strlen(str));
 	ft_strdel(&str);
 	return (-1);
@@ -55,4 +55,14 @@ void	remove_back(t_mem *mem)
 		}
 	}
 	mem->len = i;
+}
+
+void	write_success(char *cmd, int fd)
+{
+	char *str;
+
+	str = ft_strjoin("\033[92mSUCCESS: ", cmd);
+	str = ft_strjoin_nf(str, ":\n\033[0m", 1);
+	write(fd, str, ft_strlen(str));
+	ft_strdel(&str);
 }

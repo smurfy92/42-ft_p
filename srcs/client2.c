@@ -53,7 +53,10 @@ void		exec_lls(t_mem **mem, char **tabl)
 
 	f = fork();
 	if (f == 0)
+	{
+		write_success("lls", 1);
 		execve("/bin/ls", tabl, NULL);
+	}
 	wait4(f, 0, 0, NULL);
 	(*mem)->len = 0;
 }
@@ -66,6 +69,7 @@ void		exec_lpwd(t_mem **mem)
 	wd = NULL;
 	wd = getcwd(wd, 0);
 	ret = ft_strjoin_nf(wd, "\n", 1);
+	write_success("lpwd", 1);
 	write(1, ret, ft_strlen(ret));
 	ft_strdel(&ret);
 	(*mem)->len = 0;

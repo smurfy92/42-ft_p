@@ -45,6 +45,7 @@ void				remove_back(t_mem *mem);
 
 void				print_usage(void);
 int					write_error(char *cmd, char *err, int fd);
+void				write_success(char *cmd, int fd);
 t_mem				*read_fd(int fd);
 void				write_fd(int fd, t_mem *buf);
 t_mem				*ft_memjoin(t_mem *dest, t_mem *src);

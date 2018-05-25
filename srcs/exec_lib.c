@@ -18,7 +18,7 @@ int		exec_mkdir(char **tabl, int fd)
 		return (write_error("mkdir", "missing argument", fd));
 	if (mkdir(tabl[1], 0777) == -1)
 		return (write_error("mkdir", "error", fd));
-	write(fd, "", 1);
+	write_success("mkdir", fd);
 	return (0);
 }
 
@@ -28,7 +28,7 @@ int		exec_rmdir(char **tabl, int fd)
 		return (write_error("rmdir", "missing argument", fd));
 	if (rmdir(tabl[1]) == -1)
 		return (write_error("rmdir", "error", fd));
-	write(fd, "", 1);
+	write_success("rmdir", fd);
 	return (0);
 }
 
@@ -38,6 +38,6 @@ int		exec_unlink(char **tabl, int fd)
 		return (write_error("unlink", "missing argument", fd));
 	if (unlink(tabl[1]) == -1)
 		return (write_error("unlink", "error", fd));
-	write(fd, "", 1);
+	write_success("unlink", fd);
 	return (0);
 }
