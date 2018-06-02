@@ -40,51 +40,40 @@ char	*parse_wd(char *wd, char *buf)
 		else
 		{
 			wd = ft_strjoin(wd, "/");
-			wd = ft_strjoin(wd, tabl[i]);
+			wd = ft_strjoin_nf(wd, tabl[i], 1);
 		}
 	}
+	ft_free_tabl(tabl);
 	return (wd);
 }
 
-int		check_if_contains(char *wd, char *newwd)
+void	last_cd(char *wd, char *curwd, char **tabl, int socket)
 {
-	int i;
+	char	*newwd;
 
-	i = -1;
-	while (wd[++i])
-		if (wd[i] != newwd[i])
-			return (0);
-	return (1);
-}
-
-void	ft_chdir(char *wd, char *cmd, int fd)
-{
-	t_mem *tmp;
-
-	tmp = (t_mem *)malloc(sizeof(t_mem));
-	if (chdir(wd) == -1)
-		write_error(cmd, "permission denied", fd);
-	else
+	newwd = NULL;
+	newwd = parse_wd(curwd, tabl[1]);
+	if (tabl[1][0] == '/')
 	{
-		tmp->data = ft_strjoin("\033[92mSUCCESS: ", cmd);
-		tmp->data = ft_strjoin_nf(tmp->data, ": \n\033[0m", 1);
-		tmp->data = ft_strjoin_nf(tmp->data, wd, 1);
-		tmp->data = ft_strjoin_nf(tmp->data, "\n", 1);
-		tmp->len = ft_strlen(tmp->data);
-		write_fd(fd, tmp);
-		ft_free_mem(tmp);
+		if (check_if_contains(wd, tabl[1]))
+			ft_chdir(newwd, "cd", socket);
+		else
+			write_error("cd", "permission denied", socket);
+		return ;
 	}
+	if (check_if_contains(wd, newwd))
+		ft_chdir(newwd, "cd", socket);
+	else
+		write_error("cd", "permission denied", socket);
 }
 
 int		exec_cd(t_mem *mem, char *wd, int socket)
 {
 	char	**tabl;
-	char	*newwd;
 	char	*curwd;
 
 	tabl = ft_strsplit(mem->data, ' ');
 	curwd = NULL;
-	newwd = NULL;
 	curwd = getcwd(curwd, 0);
 	if (!tabl[1])
 		ft_chdir(wd, "cd", socket);
@@ -95,13 +84,7 @@ int		exec_cd(t_mem *mem, char *wd, int socket)
 		ft_chdir(curwd, "cd", socket);
 	}
 	else
-	{
-		newwd = parse_wd(curwd, tabl[1]);
-		if (check_if_contains(wd, newwd))
-			ft_chdir(newwd, "cd", socket);
-		else
-			write_error("cd", "permission denied", socket);
-	}
+		last_cd(wd, curwd, tabl, socket);
 	ft_strdel(&curwd);
 	ft_free_tabl(tabl);
 	return (0);

@@ -14,9 +14,9 @@
 
 t_mem	*exec_get2(char **tabl)
 {
-	int		file;
+	int				file;
 	struct stat		buf;
-	t_mem	*tmp;
+	t_mem			*tmp;
 
 	tmp = (t_mem*)malloc(sizeof(t_mem));
 	if (stat(tabl[1], &buf) == -1)

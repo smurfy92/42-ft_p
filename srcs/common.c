@@ -66,3 +66,33 @@ t_mem	*ft_memjoin(t_mem *dest, t_mem *src)
 	ft_free_mem(dest);
 	return (ret);
 }
+
+int		check_if_contains(char *wd, char *newwd)
+{
+	int i;
+
+	i = -1;
+	while (wd[++i])
+		if (wd[i] != newwd[i])
+			return (0);
+	return (1);
+}
+
+void	ft_chdir(char *wd, char *cmd, int fd)
+{
+	t_mem *tmp;
+
+	tmp = (t_mem *)malloc(sizeof(t_mem));
+	if (chdir(wd) == -1)
+		write_error(cmd, "permission denied", fd);
+	else
+	{
+		tmp->data = ft_strjoin("\033[92mSUCCESS: ", cmd);
+		tmp->data = ft_strjoin_nf(tmp->data, ": \n\033[0m", 1);
+		tmp->data = ft_strjoin_nf(tmp->data, wd, 1);
+		tmp->data = ft_strjoin_nf(tmp->data, "\n", 1);
+		tmp->len = ft_strlen(tmp->data);
+		write_fd(fd, tmp);
+		ft_free_mem(tmp);
+	}
+}

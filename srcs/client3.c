@@ -14,7 +14,7 @@
 
 void	check_put2(char **tabl, t_mem *tmp, t_mem **mem)
 {
-	int		file;
+	int				file;
 	struct stat		buf;
 
 	if (stat(tabl[1], &buf) == -1)
