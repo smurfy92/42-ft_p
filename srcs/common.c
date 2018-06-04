@@ -29,6 +29,8 @@ t_mem	*read_fd(int fd)
 			break ;
 		buf->len = 0;
 	}
+	if (!mem)
+		return (buf);
 	ft_free_mem(buf);
 	return (mem);
 }

@@ -61,7 +61,7 @@ void	loop(int socket)
 			write_success("quit", 1);
 			break ;
 		}
-		if (mem->len > 0)
+		if (mem->len > 0 && ft_strequ(tabl[0], "lcd") != 1)
 			write_to_server(socket, mem);
 		ft_free_tabl(tabl);
 		ft_free_mem(mem);

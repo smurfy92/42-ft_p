@@ -22,7 +22,11 @@ void	check_put2(char **tabl, t_mem *tmp, t_mem **mem)
 		write_error("put", "file doesnt exists", 2);
 		return ;
 	}
-	file = open(tabl[1], O_RDONLY);
+	if ((file = open(tabl[1], O_RDONLY)) < 0)
+	{
+		write_error("put", "permission denied", 2);
+		return ;
+	}
 	tmp->data = ft_strjoin("data ", tabl[1]);
 	tmp->data = ft_strjoin_nf(tmp->data, " ", 1);
 	tmp->len = ft_strlen(tmp->data);

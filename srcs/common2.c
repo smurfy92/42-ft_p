@@ -44,16 +44,21 @@ int		write_error(char *cmd, char *err, int fd)
 void	remove_back(t_mem *mem)
 {
 	int i;
+	int has;
 
 	i = -1;
+	has = 0;
 	while (++i < mem->len)
 	{
 		if (mem->data[i] == '\n')
 		{
 			mem->data[i] = 0;
+			has = 1;
 			break ;
 		}
 	}
+	if (has == 0)
+		write(1, "\n", 1);
 	mem->len = i;
 }
 

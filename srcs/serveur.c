@@ -66,6 +66,7 @@ void	create_client(int cs)
 	t_mem	*mem;
 	int		f;
 	char	*wd;
+	char	**tabl;
 
 	f = fork();
 	if (f == 0)
@@ -75,10 +76,13 @@ void	create_client(int cs)
 		while (42)
 		{
 			mem = read_fd(cs);
-			remove_back(mem);
+			tabl = ft_strsplit(mem->data, ' ');
+			if (ft_strequ(tabl[0], "data") != 1)
+				remove_back(mem);
 			if (check_builtin(mem, cs, wd) == -1)
 				write_error("command not found", mem->data, cs);
 			ft_free_mem(mem);
+			ft_free_tabl(tabl);
 		}
 		ft_strdel(&wd);
 	}

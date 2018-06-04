@@ -12,7 +12,7 @@
 
 #include "../includes/ftp.h"
 
-t_mem	*exec_get2(char **tabl)
+t_mem	*exec_get2(char **tabl, int fd)
 {
 	int				file;
 	struct stat		buf;
@@ -21,10 +21,14 @@ t_mem	*exec_get2(char **tabl)
 	tmp = (t_mem*)malloc(sizeof(t_mem));
 	if (stat(tabl[1], &buf) == -1)
 	{
-		write_error("get", "file doesnt exists", 2);
+		write_error("get", "file doesnt exists", fd);
 		return (NULL);
 	}
-	file = open(tabl[1], O_RDONLY);
+	if ((file = open(tabl[1], O_RDONLY)) < 0)
+	{
+		write_error("get", "permission denied", fd);
+		return (NULL);
+	}
 	tmp->data = ft_strjoin("data ", tabl[1]);
 	tmp->data = ft_strjoin_nf(tmp->data, " ", 1);
 	tmp->len = ft_strlen(tmp->data);
@@ -42,7 +46,7 @@ int		exec_get(char **tabl, int fd)
 		write_error("get", "please specify a file", fd);
 	else
 	{
-		mem = exec_get2(tabl);
+		mem = exec_get2(tabl ,fd);
 		if (mem)
 			write_fd(fd, mem);
 	}
