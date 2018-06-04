@@ -46,7 +46,7 @@ int		exec_get(char **tabl, int fd)
 		write_error("get", "please specify a file", fd);
 	else
 	{
-		mem = exec_get2(tabl ,fd);
+		mem = exec_get2(tabl, fd);
 		if (mem)
 			write_fd(fd, mem);
 	}
